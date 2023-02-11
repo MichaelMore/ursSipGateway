@@ -1,0 +1,198 @@
+﻿using NLog;
+using SharpPcap;
+using PacketDotNet;
+using WorkerThread;
+using NLog.Fluent;
+using Project.AppSetting;
+using Project.Models;
+using Project.ProjectCtrl;
+using Microsoft.AspNetCore.DataProtection.KeyManagement;
+using Project.Lib;
+using System.Net;
+using System.Net.Sockets;
+using Microsoft.AspNetCore.Http;
+using Org.BouncyCastle.Utilities.Net;
+using System.Reflection;
+using Project.Enums;
+using NLog.Filters;
+using Newtonsoft.Json;
+using System.Diagnostics;
+using ProtocolType = System.Net.Sockets.ProtocolType;
+
+namespace ThreadWorker
+{
+    public class MonitorPacketThread: IWorker
+    {
+        // protect, private
+        protected volatile bool _shouldStop;
+        protected volatile bool _shouldPause;
+
+        private Logger _nLog;
+        private string _tag;        
+
+        private Thread _myThread;                        
+
+        // live monitor
+        private static object _liveMonLock = new object();
+        public LiveMonitorModel _liveMonitor = new LiveMonitorModel( ENUM_PayloadType.PT_PCMU, GlobalVar.AppSettings.LiveMonGateway.RenewIntervalSec);
+        private ManualResetEvent _waitSendingRTP = new ManualResetEvent(false);
+
+        public PlayRtpControl sendPlayRtp = null;
+        public PlayRtpControl recvPlayRtp = null;
+
+        // public        
+        public WorkerState State { get; private set; }
+        public AppSettings_Monitor_Device MonDevice { get; private set; }        
+
+        // constructor
+        public MonitorPacketThread(AppSettings_Monitor_Device monDev) {
+            MonDevice = new AppSettings_Monitor_Device() {                
+                IpAddr = monDev.IpAddr,
+                MacAddr = monDev.MacAddr,
+                Extn = monDev.Extn,
+            };
+
+            _tag = $"MonitorPkt_{MonDevice.Extn}";
+            _nLog = LogManager.GetLogger(_tag);
+
+            var bytesPerFrame = GlobalVar.AppSettings.Monitor.AudioBytescPerFrame;
+            sendPlayRtp = new PlayRtpControl(ENUM_IPDir.Source, bytesPerFrame, 8000 * 1, 8000 * 8, ENUM_PayloadType.PT_PCMU);
+            recvPlayRtp = new PlayRtpControl(ENUM_IPDir.Source, bytesPerFrame, 8000 * 1, 8000 * 8, ENUM_PayloadType.PT_PCMU);
+        }
+
+        public void StartThread() {
+            _myThread = new Thread(this.DoWork) {
+                IsBackground = true,
+                Name = _tag
+            };
+            State = WorkerState.Starting;
+            _myThread.Start();
+        }
+
+        public void StopThread() {
+            RequestStop(); // stopping ...
+            _nLog.Info($"{_tag} is waiting to stop(join) ...");
+            _myThread.Join();
+            State = WorkerState.Stopped; // stopped !!!
+        }
+
+        public bool StartLiveMonitor(LoggerCommandModel model, out string msg) {
+            msg = "";
+            var ret = false;
+            lock (_liveMonLock) {
+                ret = _liveMonitor.StartMonitor(model, out msg);
+            }
+            return ret;            
+        }
+
+        public void StopLiveMonitor() {
+            lock (_liveMonLock) {
+                _liveMonitor.StopMonitor();
+            }
+            return;
+        }
+
+        public bool CheckRenewLiveMonitor() {
+            var ret = false;
+            lock (_liveMonLock) {
+                ret = _liveMonitor.CheckRenew();
+            }
+            return ret;
+        }
+
+        public bool IsLiveMonitorOpened() {
+            var ret = false;    
+            lock (_liveMonLock) {
+                ret = _liveMonitor.IsOpened;
+            }
+            return ret;
+        }
+
+        public async void AddMonitorRtp(ENUM_IPDir ipDir, PacketInfoModel packetInfo) {
+            if (!_liveMonitor.IsOpened) {
+                await Task.Delay(TimeSpan.FromMilliseconds(0));
+                return;
+            }
+
+            if (ipDir == ENUM_IPDir.Source) {
+                if (sendPlayRtp.AddBuffer(packetInfo)) {
+                    if (sendPlayRtp.GetJitter()) {
+                        sendPlayRtp.PlayRTP(_liveMonitor.TxEndPoint);
+                    }
+                }                  
+            }
+            else if (ipDir == ENUM_IPDir.Dest) {
+                if (recvPlayRtp.AddBuffer(packetInfo)) {
+                    if (recvPlayRtp.GetJitter()) {
+                        recvPlayRtp.PlayRTP(_liveMonitor.RxEndPoint);
+                    }
+                }
+            }
+        }
+
+
+        //public void AddMonitorRtp(ENUM_IPDir ipDir, PacketInfoModel packetInfo) {
+        //    if (!_liveMonitor.IsOpened)
+        //        return;
+
+        //    if (ipDir == ENUM_IPDir.Source) {
+        //        if (sendPlayRtp.AddBuffer(packetInfo)) // true 代表 jitter 已滿，要撥放
+        //            _waitSendingRTP.Set();                                   
+        //    }
+        //    else if (ipDir == ENUM_IPDir.Dest) {
+        //        if (recvPlayRtp.AddBuffer(packetInfo))
+        //            _waitSendingRTP.Set();
+        //    }            
+        //}
+
+        //public void RefreshMonitor(ENUM_IPDir ipDir) {
+        //    if (ipDir == ENUM_IPDir.Source) {
+        //        var orgLen = sendPlayRtp.bufferLength;
+        //        _nLog.Info($"{MonDevice.Extn} try close Send.通話: bufLen={orgLen}");
+        //        if (sendPlayRtp.RefreshJitter()) { // true 代表 jitter 已滿，要撥放
+        //            sendPlayRtp.PlayRTP(_liveMonitor.TxEndPoint);
+        //            _nLog.Info($"{MonDevice.Extn} 結束通話，Send.Refresh Jitter...(bufLen={orgLen}/{sendPlayRtp.bufferLength})" );
+        //        }
+        //    }
+        //    else if (ipDir == ENUM_IPDir.Dest) {
+        //        var orgLen = recvPlayRtp.bufferLength;
+        //        _nLog.Info($"{MonDevice.Extn} try close Recv.通話: bufLen={orgLen}");
+        //        if (recvPlayRtp.RefreshJitter()) { // true 代表 jitter 已滿，要撥放
+        //            recvPlayRtp.PlayRTP(_liveMonitor.RxEndPoint);
+        //            _nLog.Info($"{MonDevice.Extn} 結束通話，Recv.Refresh Jitter...(bufLen={orgLen}/{recvPlayRtp.bufferLength})");
+        //        }
+        //    }
+        //}
+
+        //TODO: 要解決放在 buffer 中，殘存的 data 沒有被撥出去。
+
+        public virtual void DoWork(object anObject) {
+            _nLog.Info("");
+            _nLog.Info($"********** MonitorPacket {MonDevice.Extn}@{MonDevice.IpAddr}/{MonDevice.MacAddr} is now starting ... **********");
+            State = WorkerState.Running;
+            while (!_shouldStop) {
+                Thread.Sleep(1);
+                //_waitSendingRTP.WaitOne();
+                
+                //if (sendPlayRtp.GetJitter()) {
+                //    sendPlayRtp.PlayRTP(_liveMonitor.TxEndPoint);                    
+                //}
+                //if (recvPlayRtp.GetJitter()) {
+                //    recvPlayRtp.PlayRTP(_liveMonitor.RxEndPoint);                    
+                //}
+
+                //_waitSendingRTP.Reset();
+            }// end while
+            _nLog.Info($"========== MonitorPacket {MonDevice.Extn}@{MonDevice.IpAddr}/{MonDevice.MacAddr}] terminated. ==========");
+            State = WorkerState.Stopped;
+        }
+
+        public void RequestStop() {                        
+            _nLog.Info($"{_tag} is requested to stop ...");
+            State = WorkerState.Stopping;
+            _shouldStop = true;
+        }
+
+    }
+
+}

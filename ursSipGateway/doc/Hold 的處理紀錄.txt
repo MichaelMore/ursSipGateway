@@ -1,0 +1,37 @@
+SIP Hold 
+1. 如何找 in-dialog
+2. Held 的分機，會送 Invite 給 SipServer，但不知 in-dialog 是如何辨識?
+3. Held 的分機，可能主叫/被叫
+4. Invite / 200OK / Ack / Bye 
+   => 都會判斷 FromTag、ToTag、Call-ID 才是一個完整的 Dialog
+      如果 FromTag、ToTag、Call-ID 一樣，那代表是 in-dialog
+5. SIP Log
+		5.1: 加註是否 SDP
+		5.2: Mac 往後擺
+		5.3: 花費時間 前加 =============
+		5.4: 
+6. SDP Log
+
+2022/10/16, 處理 Hold 的技術總結，
+1. RTP 部分，已經知道 "被Hold端"的 sned 頻道只有 2 個 SSRC，
+   但 Recv 頻道有 3 個 SSRC，中間多出來的一段的就是 Hold Music
+2. 預計處理方式: 把 "被Hold端"的 sned 頻道，在第一段 SSRC 的後面插入 silence，之後在混音。
+3. 問題: Hold 可能會有多段
+   3.1 怎麼知道要插在哪一個 SSRC 後面? 而且會插入多個!
+   3.2 要如何知道哪一個 SSRC 後面是需要插入的?(跟 3.1 差不多意思)
+   => 應該要從 SIP Command 來分析，
+      分析: a=sendonly, a=inactive, ... 來知道何時按了 hold
+	        也可能要看一下 branch
+			主Hold端按下 Hold，被Hold端會有 Invite ，但是 c=IN 後面的 IP = 0.0.0.0 且 a=inavtive ...
+			參考網站:
+			https://thanhloi2603.wordpress.com/2017/06/03/understanding-sip-call-onhold/
+			https://voip-sip-sdk.com/p_7353-voip-call-hold.html
+			...
+			
+			
+			=> 同一個 transaction ，branch 會一樣!!!
+			
+			=> 寫一個簡易的 SIP Viewer 
+
+  
+		

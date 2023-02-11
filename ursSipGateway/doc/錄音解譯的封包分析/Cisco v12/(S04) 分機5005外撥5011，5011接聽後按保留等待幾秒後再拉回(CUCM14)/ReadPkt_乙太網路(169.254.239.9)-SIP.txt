@@ -1,0 +1,1802 @@
+2022-10-18 10:45:58.7563 
+===================================== TCP =====================================
+time=[02:45:58.741227] ip=[10.102.7.85]@50372 => [10.102.7.17]@5060, mac=[6C5E3B87C0F6]=>[000C297B7CBE], len=1192
+================================================================================
+NOTIFY sip:5005@10.102.7.17 SIP/2.0
+Via: SIP/2.0/TCP 10.102.7.85:50372;branch=z9hG4bK4bac6d48
+To: "5005" <sip:5005@10.102.7.17>
+From: "5005" <sip:5005@10.102.7.17>;tag=6c5e3b87c0f611fb18c8d83c-7faec08f
+Call-ID: 14790a51-42281092@10.102.7.85
+Session-ID: 3119979c00105000a0006c5e3b87c0f6;remote=00000000000000000000000000000000
+Date: Wed, 05 Oct 2022 06:12:15 GMT
+CSeq: 87 NOTIFY
+Event: dialog
+Subscription-State: active
+Max-Forwards: 70
+Contact: <sip:2fad0dcf-03a3-e62e-a227-f824467cefc6@10.102.7.85:50372;transport=tcp>;+u.sip!devicename.ccm.cisco.com="SEP6C5E3B87C0F6"
+Allow: ACK,BYE,CANCEL,INVITE,NOTIFY,OPTIONS,REFER,REGISTER,UPDATE,SUBSCRIBE
+Content-Length: 353
+Content-Type: application/dialog-info+xml
+Content-Disposition: session;handling=required
+
+<?xml version="1.0" encoding="UTF-8" ?>
+<dialog-info xmlns:call="urn:x-cisco:parmams:xml:ns:dialog-info:dialog:callinfo-dialog" version="86" state="partial" entity="sip:5005@10.102.7.85">
+<dialog id="51" call-id="6c5e3b87-c0f6002e-47b622e0-437ee4c6@10.102.7.85" local-tag="6c5e3b87c0f611fa73dbcc6e-37c728f4"><state>trying</state></dialog>
+</dialog-info>
+--------------------------------------------------------------------------------
+花費時間 = 0.0299 ms
+
+
+2022-10-18 10:45:58.7563 
+===================================== TCP =====================================
+time=[02:45:58.741326] ip=[10.102.7.17]@5060 => [10.102.7.85]@50372, mac=[000C297B7CBE]=>[6C5E3B87C0F6], len=405
+================================================================================
+SIP/2.0 200 OK
+Via: SIP/2.0/TCP 10.102.7.85:50372;branch=z9hG4bK4bac6d48
+From: "5005" <sip:5005@10.102.7.17>;tag=6c5e3b87c0f611fb18c8d83c-7faec08f
+To: "5005" <sip:5005@10.102.7.17>;tag=1031115322
+Date: Wed, 05 Oct 2022 06:12:16 GMT
+Call-ID: 14790a51-42281092@10.102.7.85
+CSeq: 87 NOTIFY
+Server: Cisco-CUCM14.0
+Content-Length: 0
+
+
+--------------------------------------------------------------------------------
+花費時間 = 0.0013 ms
+
+
+2022-10-18 10:45:59.6116 
+===================================== TCP/SDP =====================================
+time=[02:45:59.597311] ip=[10.102.7.85]@50372 => [10.102.7.17]@5060, mac=[6C5E3B87C0F6]=>[000C297B7CBE], len=547
+================================================================================
+INVITE sip:5@10.102.7.17;user=phone SIP/2.0
+Via: SIP/2.0/TCP 10.102.7.85:50372;branch=z9hG4bK77a53653
+From: "5005" <sip:5005@10.102.7.17>;tag=6c5e3b87c0f611fa73dbcc6e-37c728f4
+To: <sip:5@10.102.7.17>
+Call-ID: 6c5e3b87-c0f6002e-47b622e0-437ee4c6@10.102.7.85
+Max-Forwards: 70
+Session-ID: 39d899e300105000a0006c5e3b87c0f6;remote=00000000000000000000000000000000
+Date: Wed, 05 Oct 2022 06:12:16 GMT
+CSeq: 101 INVITE
+User-Agent: Cisco-CP7821/14.0.1
+Contact: <sip:2fad0dcf-03a3-e62e-a227-f824467cefc6@10.102.7.85:50372;transport=tcp>;+u.sip!devicename.ccm.cisco.com="SEP6C5E3B87C0F6"
+Expires: 180
+Accept: application/sdp
+Allow: ACK,BYE,CANCEL,INVITE,NOTIFY,OPTIONS,REFER,REGISTER,UPDATE,SUBSCRIBE,INFO
+Remote-Party-ID: "5005" <sip:5005@10.102.7.17>;party=calling;id-type=subscriber;privacy=off;screen=yes
+Supported: replaces,join,sdp-anat,norefersub,resource-priority,extended-refer,X-cisco-callinfo,X-cisco-serviceuri,X-cisco-escapecodes,X-cisco-service-control,X-cisco-srtp-fallback,X-cisco-monrec,X-cisco-config,X-cisco-sis-7.0.0,X-cisco-xsi-8.5.1
+Allow-Events: kpml,dialog
+Recv-Info: conference
+Recv-Info: x-cisco-conference
+Content-Length: 685
+Content-Type: application/sdp
+Content-Disposition: session;handling=optional
+
+v=0
+o=Cisco-SIPUA 12763 0 IN IP4 10.102.7.85
+s=SIP Call
+b=AS:4064
+t=0 0
+m=audio 22110 RTP/AVP 114 9 113 115 0 8 116 18 101
+c=IN IP4 10.102.7.85
+b=TIAS:64000
+a=rtpmap:114 opus/48000/2
+a=fmtp:114 maxplaybackrate=16000;sprop-maxcapturerate=16000;maxaveragebitrate=64000;stereo=0;sprop-stereo=0;usedtx=0
+a=rtpmap:9 G722/8000
+a=rtpmap:113 AMR-WB/16000
+a=fmtp:113 octet-align=0;mode-change-capability=2
+a=rtpmap:115 AMR-WB/16000
+a=fmtp:115 octet-align=1;mode-change-capability=2
+a=rtpmap:0 PCMU/8000
+a=rtpmap:8 PCMA/8000
+a=rtpmap:116 iLBC/8000
+a=fmtp:116 mode=20
+a=rtpmap:18 G729/8000
+a=fmtp:18 annexb=yes
+a=rtpmap:101 telephone-event/8000
+a=fmtp:101 0-15
+a=sendrecv
+
+--------------------------------------------------------------------------------
+花費時間 = 0.0071 ms
+
+
+2022-10-18 10:45:59.6263 
+===================================== TCP =====================================
+time=[02:45:59.611460] ip=[10.102.7.17]@5060 => [10.102.7.85]@50372, mac=[000C297B7CBE]=>[6C5E3B87C0F6], len=403
+================================================================================
+SIP/2.0 100 Trying
+Via: SIP/2.0/TCP 10.102.7.85:50372;branch=z9hG4bK77a53653
+From: "5005" <sip:5005@10.102.7.17>;tag=6c5e3b87c0f611fa73dbcc6e-37c728f4
+To: <sip:5@10.102.7.17>
+Date: Wed, 05 Oct 2022 06:12:16 GMT
+Call-ID: 6c5e3b87-c0f6002e-47b622e0-437ee4c6@10.102.7.85
+CSeq: 101 INVITE
+Allow-Events: presence
+Content-Length: 0
+
+
+--------------------------------------------------------------------------------
+花費時間 = 0.003 ms
+
+
+2022-10-18 10:45:59.6263 
+===================================== TCP =====================================
+time=[02:45:59.616059] ip=[10.102.7.17]@5060 => [10.102.7.85]@50372, mac=[000C297B7CBE]=>[6C5E3B87C0F6], len=1157
+================================================================================
+SUBSCRIBE sip:2fad0dcf-03a3-e62e-a227-f824467cefc6@10.102.7.85:50372;transport=tcp SIP/2.0
+Via: SIP/2.0/TCP 10.102.7.17:5060;branch=z9hG4bK6e46b73bfa398
+From: <sip:5@10.102.7.17>;tag=1553310487
+To: <sip:5005@10.102.7.85>
+Call-ID: a8577c00-1ee16277-6beec-1107660a@10.102.7.17
+CSeq: 101 SUBSCRIBE
+Date: Wed, 05 Oct 2022 06:12:17 GMT
+User-Agent: Cisco-CUCM14.0
+Event: kpml; call-id=6c5e3b87-c0f6002e-47b622e0-437ee4c6@10.102.7.85; from-tag=6c5e3b87c0f611fa73dbcc6e-37c728f4
+Expires: 7200
+Contact: <sip:5@10.102.7.17:5060;transport=tcp>
+Accept: application/kpml-response+xml
+Max-Forwards: 70
+Content-Type: application/kpml-request+xml
+Content-Length: 423
+
+<?xml version="1.0" encoding="UTF-8" ?>
+<kpml-request xmlns="urn:ietf:params:xml:ns:kpml-request" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:kpml-request kpml-request.xsd" version="1.0">
+
+  <pattern criticaldigittimer="1000" extradigittimer="500" interdigittimer="4000" persist="persist">
+    <regex tag="Backspace OK">[x#*+]|bs</regex>
+  </pattern>
+
+</kpml-request>
+
+
+--------------------------------------------------------------------------------
+花費時間 = 0.003 ms
+
+
+2022-10-18 10:45:59.7034 
+===================================== TCP =====================================
+time=[02:45:59.703369] ip=[10.102.7.85]@50372 => [10.102.7.17]@5060, mac=[6C5E3B87C0F6]=>[000C297B7CBE], len=652
+================================================================================
+SIP/2.0 200 OK
+Via: SIP/2.0/TCP 10.102.7.17:5060;branch=z9hG4bK6e46b73bfa398
+From: <sip:5@10.102.7.17>;tag=1553310487
+To: <sip:5005@10.102.7.85>;tag=6c5e3b87c0f611fc314c1b95-44726dbf
+Call-ID: a8577c00-1ee16277-6beec-1107660a@10.102.7.17
+Session-ID: 3119979c00105000a0006c5e3b87c0f6;remote=00000000000000000000000000000000
+Date: Wed, 05 Oct 2022 06:12:16 GMT
+CSeq: 101 SUBSCRIBE
+Server: Cisco-CP7821/14.0.1
+Contact: <sip:2fad0dcf-03a3-e62e-a227-f824467cefc6@10.102.7.85:50372;transport=tcp>;+u.sip!devicename.ccm.cisco.com="SEP6C5E3B87C0F6"
+Expires: 7200
+Content-Length: 0
+
+
+--------------------------------------------------------------------------------
+花費時間 = 0.0079 ms
+
+
+2022-10-18 10:45:59.7655 
+===================================== TCP =====================================
+time=[02:45:59.750506] ip=[10.102.7.85]@50372 => [10.102.7.17]@5060, mac=[6C5E3B87C0F6]=>[000C297B7CBE], len=789
+================================================================================
+NOTIFY sip:5@10.102.7.17:5060;transport=tcp SIP/2.0
+Via: SIP/2.0/TCP 10.102.7.85:50372;branch=z9hG4bK77cea6b2
+To: <sip:5@10.102.7.17>;tag=1553310487
+From: <sip:5005@10.102.7.85>;tag=6c5e3b87c0f611fc314c1b95-44726dbf
+Call-ID: a8577c00-1ee16277-6beec-1107660a@10.102.7.17
+Session-ID: 3119979c00105000a0006c5e3b87c0f6;remote=00000000000000000000000000000000
+Date: Wed, 05 Oct 2022 06:12:16 GMT
+CSeq: 1000 NOTIFY
+Event: kpml
+Subscription-State: active; expires=7200
+Max-Forwards: 70
+Contact: <sip:2fad0dcf-03a3-e62e-a227-f824467cefc6@10.102.7.85:50372;transport=tcp>;+u.sip!devicename.ccm.cisco.com="SEP6C5E3B87C0F6"
+Allow: ACK,BYE,CANCEL,INVITE,NOTIFY,OPTIONS,REFER,REGISTER,UPDATE,SUBSCRIBE
+Content-Length: 0
+
+
+--------------------------------------------------------------------------------
+花費時間 = 0.0089 ms
+
+
+2022-10-18 10:45:59.7655 
+===================================== TCP =====================================
+time=[02:45:59.750723] ip=[10.102.7.17]@5060 => [10.102.7.85]@50372, mac=[000C297B7CBE]=>[6C5E3B87C0F6], len=405
+================================================================================
+SIP/2.0 200 OK
+Via: SIP/2.0/TCP 10.102.7.85:50372;branch=z9hG4bK77cea6b2
+From: <sip:5005@10.102.7.85>;tag=6c5e3b87c0f611fc314c1b95-44726dbf
+To: <sip:5@10.102.7.17>;tag=1553310487
+Date: Wed, 05 Oct 2022 06:12:17 GMT
+Call-ID: a8577c00-1ee16277-6beec-1107660a@10.102.7.17
+CSeq: 1000 NOTIFY
+Server: Cisco-CUCM14.0
+Content-Length: 0
+
+
+--------------------------------------------------------------------------------
+花費時間 = 0.0023 ms
+
+
+2022-10-18 10:45:59.8745 
+===================================== TCP =====================================
+time=[02:45:59.859414] ip=[10.102.7.85]@50372 => [10.102.7.17]@5060, mac=[6C5E3B87C0F6]=>[000C297B7CBE], len=1089
+================================================================================
+NOTIFY sip:5@10.102.7.17:5060;transport=tcp SIP/2.0
+Via: SIP/2.0/TCP 10.102.7.85:50372;branch=z9hG4bK4bf11126
+To: <sip:5@10.102.7.17>;tag=1553310487
+From: <sip:5005@10.102.7.85>;tag=6c5e3b87c0f611fc314c1b95-44726dbf
+Call-ID: a8577c00-1ee16277-6beec-1107660a@10.102.7.17
+Session-ID: 3119979c00105000a0006c5e3b87c0f6;remote=00000000000000000000000000000000
+Date: Wed, 05 Oct 2022 06:12:16 GMT
+CSeq: 1001 NOTIFY
+Event: kpml
+Subscription-State: active; expires=7200
+Max-Forwards: 70
+Contact: <sip:2fad0dcf-03a3-e62e-a227-f824467cefc6@10.102.7.85:50372;transport=tcp>;+u.sip!devicename.ccm.cisco.com="SEP6C5E3B87C0F6"
+Allow: ACK,BYE,CANCEL,INVITE,NOTIFY,OPTIONS,REFER,REGISTER,UPDATE,SUBSCRIBE
+Content-Length: 205
+Content-Type: application/kpml-response+xml
+Content-Disposition: session;handling=required
+
+<?xml version="1.0" encoding="UTF-8"?>
+<kpml-response xmlns="urn:ietf:params:xml:ns:kpml-response" version="1.0" code="200" text="OK" suppressed="false" forced_flush="false" digits="0" tag="Backspace OK"/>
+--------------------------------------------------------------------------------
+花費時間 = 0.0069 ms
+
+
+2022-10-18 10:45:59.8745 
+===================================== TCP =====================================
+time=[02:45:59.859606] ip=[10.102.7.17]@5060 => [10.102.7.85]@50372, mac=[000C297B7CBE]=>[6C5E3B87C0F6], len=405
+================================================================================
+SIP/2.0 200 OK
+Via: SIP/2.0/TCP 10.102.7.85:50372;branch=z9hG4bK4bf11126
+From: <sip:5005@10.102.7.85>;tag=6c5e3b87c0f611fc314c1b95-44726dbf
+To: <sip:5@10.102.7.17>;tag=1553310487
+Date: Wed, 05 Oct 2022 06:12:17 GMT
+Call-ID: a8577c00-1ee16277-6beec-1107660a@10.102.7.17
+CSeq: 1001 NOTIFY
+Server: Cisco-CUCM14.0
+Content-Length: 0
+
+
+--------------------------------------------------------------------------------
+花費時間 = 0.0016 ms
+
+
+2022-10-18 10:46:00.1833 
+===================================== TCP =====================================
+time=[02:46:00.168313] ip=[10.102.7.85]@50372 => [10.102.7.17]@5060, mac=[6C5E3B87C0F6]=>[000C297B7CBE], len=1089
+================================================================================
+NOTIFY sip:5@10.102.7.17:5060;transport=tcp SIP/2.0
+Via: SIP/2.0/TCP 10.102.7.85:50372;branch=z9hG4bK27a9ae2d
+To: <sip:5@10.102.7.17>;tag=1553310487
+From: <sip:5005@10.102.7.85>;tag=6c5e3b87c0f611fc314c1b95-44726dbf
+Call-ID: a8577c00-1ee16277-6beec-1107660a@10.102.7.17
+Session-ID: 3119979c00105000a0006c5e3b87c0f6;remote=00000000000000000000000000000000
+Date: Wed, 05 Oct 2022 06:12:16 GMT
+CSeq: 1002 NOTIFY
+Event: kpml
+Subscription-State: active; expires=7200
+Max-Forwards: 70
+Contact: <sip:2fad0dcf-03a3-e62e-a227-f824467cefc6@10.102.7.85:50372;transport=tcp>;+u.sip!devicename.ccm.cisco.com="SEP6C5E3B87C0F6"
+Allow: ACK,BYE,CANCEL,INVITE,NOTIFY,OPTIONS,REFER,REGISTER,UPDATE,SUBSCRIBE
+Content-Length: 205
+Content-Type: application/kpml-response+xml
+Content-Disposition: session;handling=required
+
+<?xml version="1.0" encoding="UTF-8"?>
+<kpml-response xmlns="urn:ietf:params:xml:ns:kpml-response" version="1.0" code="200" text="OK" suppressed="false" forced_flush="false" digits="1" tag="Backspace OK"/>
+--------------------------------------------------------------------------------
+花費時間 = 0.0094 ms
+
+
+2022-10-18 10:46:00.1833 
+===================================== TCP =====================================
+time=[02:46:00.168412] ip=[10.102.7.17]@5060 => [10.102.7.85]@50372, mac=[000C297B7CBE]=>[6C5E3B87C0F6], len=405
+================================================================================
+SIP/2.0 200 OK
+Via: SIP/2.0/TCP 10.102.7.85:50372;branch=z9hG4bK27a9ae2d
+From: <sip:5005@10.102.7.85>;tag=6c5e3b87c0f611fc314c1b95-44726dbf
+To: <sip:5@10.102.7.17>;tag=1553310487
+Date: Wed, 05 Oct 2022 06:12:17 GMT
+Call-ID: a8577c00-1ee16277-6beec-1107660a@10.102.7.17
+CSeq: 1002 NOTIFY
+Server: Cisco-CUCM14.0
+Content-Length: 0
+
+
+--------------------------------------------------------------------------------
+花費時間 = 0.0012 ms
+
+
+2022-10-18 10:46:00.3084 
+===================================== TCP =====================================
+time=[02:46:00.292304] ip=[10.102.7.85]@50372 => [10.102.7.17]@5060, mac=[6C5E3B87C0F6]=>[000C297B7CBE], len=1089
+================================================================================
+NOTIFY sip:5@10.102.7.17:5060;transport=tcp SIP/2.0
+Via: SIP/2.0/TCP 10.102.7.85:50372;branch=z9hG4bK35b8880d
+To: <sip:5@10.102.7.17>;tag=1553310487
+From: <sip:5005@10.102.7.85>;tag=6c5e3b87c0f611fc314c1b95-44726dbf
+Call-ID: a8577c00-1ee16277-6beec-1107660a@10.102.7.17
+Session-ID: 3119979c00105000a0006c5e3b87c0f6;remote=00000000000000000000000000000000
+Date: Wed, 05 Oct 2022 06:12:16 GMT
+CSeq: 1003 NOTIFY
+Event: kpml
+Subscription-State: active; expires=7200
+Max-Forwards: 70
+Contact: <sip:2fad0dcf-03a3-e62e-a227-f824467cefc6@10.102.7.85:50372;transport=tcp>;+u.sip!devicename.ccm.cisco.com="SEP6C5E3B87C0F6"
+Allow: ACK,BYE,CANCEL,INVITE,NOTIFY,OPTIONS,REFER,REGISTER,UPDATE,SUBSCRIBE
+Content-Length: 205
+Content-Type: application/kpml-response+xml
+Content-Disposition: session;handling=required
+
+<?xml version="1.0" encoding="UTF-8"?>
+<kpml-response xmlns="urn:ietf:params:xml:ns:kpml-response" version="1.0" code="200" text="OK" suppressed="false" forced_flush="false" digits="1" tag="Backspace OK"/>
+--------------------------------------------------------------------------------
+花費時間 = 0.0103 ms
+
+
+2022-10-18 10:46:00.3084 
+===================================== TCP =====================================
+time=[02:46:00.292427] ip=[10.102.7.17]@5060 => [10.102.7.85]@50372, mac=[000C297B7CBE]=>[6C5E3B87C0F6], len=405
+================================================================================
+SIP/2.0 200 OK
+Via: SIP/2.0/TCP 10.102.7.85:50372;branch=z9hG4bK35b8880d
+From: <sip:5005@10.102.7.85>;tag=6c5e3b87c0f611fc314c1b95-44726dbf
+To: <sip:5@10.102.7.17>;tag=1553310487
+Date: Wed, 05 Oct 2022 06:12:17 GMT
+Call-ID: a8577c00-1ee16277-6beec-1107660a@10.102.7.17
+CSeq: 1003 NOTIFY
+Server: Cisco-CUCM14.0
+Content-Length: 0
+
+
+--------------------------------------------------------------------------------
+花費時間 = 0.0013 ms
+
+
+2022-10-18 10:46:00.3084 
+===================================== TCP =====================================
+time=[02:46:00.292551] ip=[10.102.7.17]@5060 => [10.102.7.85]@50372, mac=[000C297B7CBE]=>[6C5E3B87C0F6], len=684
+================================================================================
+SUBSCRIBE sip:2fad0dcf-03a3-e62e-a227-f824467cefc6@10.102.7.85:50372;transport=tcp SIP/2.0
+Via: SIP/2.0/TCP 10.102.7.17:5060;branch=z9hG4bK6e46c1e1bde92
+From: <sip:5@10.102.7.17>;tag=1553310487
+To: <sip:5005@10.102.7.85>;tag=6c5e3b87c0f611fc314c1b95-44726dbf
+Call-ID: a8577c00-1ee16277-6beec-1107660a@10.102.7.17
+CSeq: 102 SUBSCRIBE
+Date: Wed, 05 Oct 2022 06:12:17 GMT
+User-Agent: Cisco-CUCM14.0
+Event: kpml; call-id=6c5e3b87-c0f6002e-47b622e0-437ee4c6@10.102.7.85; from-tag=6c5e3b87c0f611fa73dbcc6e-37c728f4
+Expires: 0
+Contact: <sip:5@10.102.7.17:5060;transport=tcp>
+Max-Forwards: 70
+Content-Length: 0
+
+
+--------------------------------------------------------------------------------
+花費時間 = 0.0012 ms
+
+
+2022-10-18 10:46:00.3084 
+===================================== TCP =====================================
+time=[02:46:00.295025] ip=[10.102.7.17]@5060 => [10.102.7.50]@49723, mac=[000C297B7CBE]=>[6C5E3B87CF65], len=1195
+================================================================================
+INVITE sip:46bef463-2f02-be56-da45-4e66e6722bbb@10.102.7.50:49723;transport=tcp SIP/2.0
+Via: SIP/2.0/TCP 10.102.7.17:5060;branch=z9hG4bK6e46d785c8958
+From: <sip:5005@10.102.7.17>;tag=3114230~7c16b6c4-e63f-4187-a327-88baa1919a86-30701755
+To: <sip:5011@10.102.7.17>
+Date: Wed, 05 Oct 2022 06:12:17 GMT
+Call-ID: a8577c00-1ee16277-6beed-1107660a@10.102.7.17
+Supported: timer,resource-priority,replaces
+Min-SE:  1800
+User-Agent: Cisco-CUCM14.0
+Allow: INVITE, OPTIONS, INFO, BYE, CANCEL, ACK, PRACK, UPDATE, REFER, SUBSCRIBE, NOTIFY
+CSeq: 101 INVITE
+Expires: 180
+Allow-Events: presence
+Call-Info: <urn:x-cisco-remotecc:callinfo>; security= Unknown; orientation= from; gci= 1-150708; isVoip; call-instance= 1
+Send-Info: conference, x-cisco-conference
+Alert-Info: <file://Bellcore-dr1/>
+Session-ID: 39d899e300105000a0006c5e3b87c0f6;remote=00000000000000000000000000000000
+Remote-Party-ID: <sip:5005@10.102.7.17;x-cisco-callback-number=5005>;party=calling;screen=yes;privacy=off
+Contact: <sip:5005@10.102.7.17:5060;transport=tcp>;+u.sip!devicename.ccm.cisco.com="SEP6C5E3B87C0F6"
+Max-Forwards: 69
+Content-Length: 0
+
+
+--------------------------------------------------------------------------------
+花費時間 = 0.0019 ms
+
+
+2022-10-18 10:46:00.3084 
+===================================== TCP =====================================
+time=[02:46:00.308305] ip=[10.102.7.50]@49723 => [10.102.7.17]@5060, mac=[6C5E3B87CF65]=>[000C297B7CBE], len=1056
+================================================================================
+SIP/2.0 100 Trying
+Via: SIP/2.0/TCP 10.102.7.17:5060;branch=z9hG4bK6e46d785c8958
+From: <sip:5005@10.102.7.17>;tag=3114230~7c16b6c4-e63f-4187-a327-88baa1919a86-30701755
+To: <sip:5011@10.102.7.17>
+Call-ID: a8577c00-1ee16277-6beed-1107660a@10.102.7.17
+Session-ID: 413d3ded00105000a0006c5e3b87cf65;remote=39d899e300105000a0006c5e3b87c0f6
+Date: Wed, 05 Oct 2022 06:12:17 GMT
+CSeq: 101 INVITE
+Server: Cisco-CP7821/14.0.1
+Contact: <sip:46bef463-2f02-be56-da45-4e66e6722bbb@10.102.7.50:49723;transport=tcp>;+u.sip!devicename.ccm.cisco.com="SEP6C5E3B87CF65"
+Allow: ACK,BYE,CANCEL,INVITE,NOTIFY,OPTIONS,REFER,REGISTER,UPDATE,SUBSCRIBE,INFO
+Supported: replaces,join,sdp-anat,norefersub,resource-priority,extended-refer,X-cisco-callinfo,X-cisco-serviceuri,X-cisco-escapecodes,X-cisco-service-control,X-cisco-srtp-fallback,X-cisco-monrec,X-cisco-config,X-cisco-sis-7.0.0,X-cisco-xsi-8.5.1
+Allow-Events: kpml,dialog
+Content-Length: 0
+Recv-Info: conference
+Recv-Info: x-cisco-conference
+
+
+--------------------------------------------------------------------------------
+花費時間 = 0.0024 ms
+
+
+2022-10-18 10:46:00.3084 
+===================================== TCP =====================================
+time=[02:46:00.310763] ip=[10.102.7.85]@50372 => [10.102.7.17]@5060, mac=[6C5E3B87C0F6]=>[000C297B7CBE], len=649
+================================================================================
+SIP/2.0 200 OK
+Via: SIP/2.0/TCP 10.102.7.17:5060;branch=z9hG4bK6e46c1e1bde92
+From: <sip:5@10.102.7.17>;tag=1553310487
+To: <sip:5005@10.102.7.85>;tag=6c5e3b87c0f611fc314c1b95-44726dbf
+Call-ID: a8577c00-1ee16277-6beec-1107660a@10.102.7.17
+Session-ID: 3119979c00105000a0006c5e3b87c0f6;remote=00000000000000000000000000000000
+Date: Wed, 05 Oct 2022 06:12:16 GMT
+CSeq: 102 SUBSCRIBE
+Server: Cisco-CP7821/14.0.1
+Contact: <sip:2fad0dcf-03a3-e62e-a227-f824467cefc6@10.102.7.85:50372;transport=tcp>;+u.sip!devicename.ccm.cisco.com="SEP6C5E3B87C0F6"
+Expires: 0
+Content-Length: 0
+
+
+--------------------------------------------------------------------------------
+花費時間 = 0.0009 ms
+
+
+2022-10-18 10:46:00.3834 
+===================================== TCP =====================================
+time=[02:46:00.368410] ip=[10.102.7.85]@50372 => [10.102.7.17]@5060, mac=[6C5E3B87C0F6]=>[000C297B7CBE], len=1108
+================================================================================
+NOTIFY sip:5@10.102.7.17:5060;transport=tcp SIP/2.0
+Via: SIP/2.0/TCP 10.102.7.85:50372;branch=z9hG4bK3f125692
+To: <sip:5@10.102.7.17>;tag=1553310487
+From: <sip:5005@10.102.7.85>;tag=6c5e3b87c0f611fc314c1b95-44726dbf
+Call-ID: a8577c00-1ee16277-6beec-1107660a@10.102.7.17
+Session-ID: 3119979c00105000a0006c5e3b87c0f6;remote=00000000000000000000000000000000
+Date: Wed, 05 Oct 2022 06:12:16 GMT
+CSeq: 1004 NOTIFY
+Event: kpml
+Subscription-State: terminated; reason=timeout
+Max-Forwards: 70
+Contact: <sip:2fad0dcf-03a3-e62e-a227-f824467cefc6@10.102.7.85:50372;transport=tcp>;+u.sip!devicename.ccm.cisco.com="SEP6C5E3B87C0F6"
+Allow: ACK,BYE,CANCEL,INVITE,NOTIFY,OPTIONS,REFER,REGISTER,UPDATE,SUBSCRIBE
+Content-Length: 218
+Content-Type: application/kpml-response+xml
+Content-Disposition: session;handling=required
+
+<?xml version="1.0" encoding="UTF-8"?>
+<kpml-response xmlns="urn:ietf:params:xml:ns:kpml-response" version="1.0" code="487" text="Subscription Exp" suppressed="false" forced_flush="false" digits="" tag="Backspace OK"/>
+--------------------------------------------------------------------------------
+花費時間 = 0.0084 ms
+
+
+2022-10-18 10:46:00.3834 
+===================================== TCP =====================================
+time=[02:46:00.368552] ip=[10.102.7.17]@5060 => [10.102.7.85]@50372, mac=[000C297B7CBE]=>[6C5E3B87C0F6], len=405
+================================================================================
+SIP/2.0 200 OK
+Via: SIP/2.0/TCP 10.102.7.85:50372;branch=z9hG4bK3f125692
+From: <sip:5005@10.102.7.85>;tag=6c5e3b87c0f611fc314c1b95-44726dbf
+To: <sip:5@10.102.7.17>;tag=1553310487
+Date: Wed, 05 Oct 2022 06:12:17 GMT
+Call-ID: a8577c00-1ee16277-6beec-1107660a@10.102.7.17
+CSeq: 1004 NOTIFY
+Server: Cisco-CUCM14.0
+Content-Length: 0
+
+
+--------------------------------------------------------------------------------
+花費時間 = 0.0015 ms
+
+
+2022-10-18 10:46:00.4293 
+===================================== TCP =====================================
+time=[02:46:00.416304] ip=[10.102.7.50]@49723 => [10.102.7.17]@5060, mac=[6C5E3B87CF65]=>[000C297B7CBE], len=1153
+================================================================================
+SIP/2.0 180 Ringing
+Via: SIP/2.0/TCP 10.102.7.17:5060;branch=z9hG4bK6e46d785c8958
+From: <sip:5005@10.102.7.17>;tag=3114230~7c16b6c4-e63f-4187-a327-88baa1919a86-30701755
+To: <sip:5011@10.102.7.17>;tag=6c5e3b87cf6501297bf6ee21-63db4f2f
+Call-ID: a8577c00-1ee16277-6beed-1107660a@10.102.7.17
+Session-ID: 413d3ded00105000a0006c5e3b87cf65;remote=39d899e300105000a0006c5e3b87c0f6
+Date: Wed, 05 Oct 2022 06:12:17 GMT
+CSeq: 101 INVITE
+Server: Cisco-CP7821/14.0.1
+Contact: <sip:46bef463-2f02-be56-da45-4e66e6722bbb@10.102.7.50:49723;transport=tcp>;+u.sip!devicename.ccm.cisco.com="SEP6C5E3B87CF65"
+Allow: ACK,BYE,CANCEL,INVITE,NOTIFY,OPTIONS,REFER,REGISTER,UPDATE,SUBSCRIBE,INFO
+Remote-Party-ID: "5011 82395011" <sip:5011@10.102.7.17>;party=called;id-type=subscriber;privacy=off;screen=yes
+Supported: replaces,join,sdp-anat,norefersub,resource-priority,extended-refer,X-cisco-callinfo,X-cisco-serviceuri,X-cisco-escapecodes,X-cisco-service-control,X-cisco-srtp-fallback,X-cisco-monrec,X-cisco-config,X-cisco-sis-7.0.0,X-cisco-xsi-8.5.1
+Allow-Events: kpml,dialog
+Content-Length: 0
+
+
+--------------------------------------------------------------------------------
+花費時間 = 0.0062 ms
+
+
+2022-10-18 10:46:00.4443 
+===================================== TCP =====================================
+time=[02:46:00.429259] ip=[10.102.7.17]@5060 => [10.102.7.85]@50372, mac=[000C297B7CBE]=>[6C5E3B87C0F6], len=1171
+================================================================================
+SIP/2.0 180 Ringing
+Via: SIP/2.0/TCP 10.102.7.85:50372;branch=z9hG4bK77a53653
+From: "5005" <sip:5005@10.102.7.17>;tag=6c5e3b87c0f611fa73dbcc6e-37c728f4
+To: <sip:5@10.102.7.17>;tag=3114228~7c16b6c4-e63f-4187-a327-88baa1919a86-30701754
+Date: Wed, 05 Oct 2022 06:12:16 GMT
+Call-ID: 6c5e3b87-c0f6002e-47b622e0-437ee4c6@10.102.7.85
+CSeq: 101 INVITE
+Allow: INVITE, OPTIONS, INFO, BYE, CANCEL, ACK, PRACK, UPDATE, REFER, SUBSCRIBE, NOTIFY
+Allow-Events: presence
+Server: Cisco-CUCM14.0
+Call-Info: <urn:x-cisco-remotecc:callinfo>; security= Unknown; orientation= to; ui-state= ringout; gci= 1-150708; isVoip; ignore-early-media=true; call-instance= 1
+Send-Info: conference, x-cisco-conference
+Remote-Party-ID: "5011 82395011" <sip:5011@10.102.7.17>;party=called;screen=yes;privacy=off
+Session-ID: 413d3ded00105000a0006c5e3b87cf65;remote=39d899e300105000a0006c5e3b87c0f6
+Remote-Party-ID: "5011 82395011" <sip:5011@10.102.7.17;user=phone>;party=x-cisco-original-called;privacy=off
+Contact: <sip:5@10.102.7.17:5060;transport=tcp>;+u.sip!devicename.ccm.cisco.com="SEP6C5E3B87CF65"
+Content-Length: 0
+
+
+--------------------------------------------------------------------------------
+花費時間 = 0.0101 ms
+
+
+2022-10-18 10:46:02.1993 
+===================================== TCP/SDP =====================================
+time=[02:46:02.183992] ip=[10.102.7.50]@49723 => [10.102.7.17]@5060, mac=[6C5E3B87CF65]=>[000C297B7CBE], len=519
+================================================================================
+SIP/2.0 200 OK
+Via: SIP/2.0/TCP 10.102.7.17:5060;branch=z9hG4bK6e46d785c8958
+From: <sip:5005@10.102.7.17>;tag=3114230~7c16b6c4-e63f-4187-a327-88baa1919a86-30701755
+To: <sip:5011@10.102.7.17>;tag=6c5e3b87cf6501297bf6ee21-63db4f2f
+Call-ID: a8577c00-1ee16277-6beed-1107660a@10.102.7.17
+Session-ID: 413d3ded00105000a0006c5e3b87cf65;remote=39d899e300105000a0006c5e3b87c0f6
+Date: Wed, 05 Oct 2022 06:12:18 GMT
+CSeq: 101 INVITE
+Server: Cisco-CP7821/14.0.1
+Contact: <sip:46bef463-2f02-be56-da45-4e66e6722bbb@10.102.7.50:49723;transport=tcp>;+u.sip!devicename.ccm.cisco.com="SEP6C5E3B87CF65"
+Allow: ACK,BYE,CANCEL,INVITE,NOTIFY,OPTIONS,REFER,REGISTER,UPDATE,SUBSCRIBE,INFO
+Remote-Party-ID: "5011 82395011" <sip:5011@10.102.7.17>;party=called;id-type=subscriber;privacy=off;screen=yes
+Supported: replaces,join,sdp-anat,norefersub,resource-priority,extended-refer,X-cisco-callinfo,X-cisco-serviceuri,X-cisco-escapecodes,X-cisco-service-control,X-cisco-srtp-fallback,X-cisco-monrec,X-cisco-config,X-cisco-sis-7.0.0,X-cisco-xsi-8.5.1
+Allow-Events: kpml,dialog
+Recv-Info: conference
+Recv-Info: x-cisco-conference
+Content-Length: 684
+Content-Type: application/sdp
+Content-Disposition: session;handling=optional
+
+v=0
+o=Cisco-SIPUA 3692 0 IN IP4 10.102.7.50
+s=SIP Call
+b=AS:4064
+t=0 0
+m=audio 31402 RTP/AVP 114 9 113 115 0 8 116 18 101
+c=IN IP4 10.102.7.50
+b=TIAS:64000
+a=rtpmap:114 opus/48000/2
+a=fmtp:114 maxplaybackrate=16000;sprop-maxcapturerate=16000;maxaveragebitrate=64000;stereo=0;sprop-stereo=0;usedtx=0
+a=rtpmap:9 G722/8000
+a=rtpmap:113 AMR-WB/16000
+a=fmtp:113 octet-align=0;mode-change-capability=2
+a=rtpmap:115 AMR-WB/16000
+a=fmtp:115 octet-align=1;mode-change-capability=2
+a=rtpmap:0 PCMU/8000
+a=rtpmap:8 PCMA/8000
+a=rtpmap:116 iLBC/8000
+a=fmtp:116 mode=20
+a=rtpmap:18 G729/8000
+a=fmtp:18 annexb=yes
+a=rtpmap:101 telephone-event/8000
+a=fmtp:101 0-15
+a=sendrecv
+
+--------------------------------------------------------------------------------
+花費時間 = 0.0064 ms
+
+
+2022-10-18 10:46:02.1993 
+===================================== TCP/SDP =====================================
+time=[02:46:02.184181] ip=[10.102.7.17]@5060 => [10.102.7.50]@49723, mac=[000C297B7CBE]=>[6C5E3B87CF65], len=910
+================================================================================
+ACK sip:46bef463-2f02-be56-da45-4e66e6722bbb@10.102.7.50:49723;transport=tcp SIP/2.0
+Via: SIP/2.0/TCP 10.102.7.17:5060;branch=z9hG4bK6e46e7600da8d
+From: <sip:5005@10.102.7.17>;tag=3114230~7c16b6c4-e63f-4187-a327-88baa1919a86-30701755
+To: <sip:5011@10.102.7.17>;tag=6c5e3b87cf6501297bf6ee21-63db4f2f
+Date: Wed, 05 Oct 2022 06:12:17 GMT
+Call-ID: a8577c00-1ee16277-6beed-1107660a@10.102.7.17
+User-Agent: Cisco-CUCM14.0
+Max-Forwards: 70
+CSeq: 101 ACK
+Allow-Events: presence
+Session-ID: 39d899e300105000a0006c5e3b87c0f6;remote=413d3ded00105000a0006c5e3b87cf65
+Content-Type: application/sdp
+Content-Length: 224
+
+v=0
+o=CiscoSystemsCCM-SIP 3114230 1 IN IP4 10.102.7.17
+s=SIP Call
+c=IN IP4 10.102.7.85
+b=AS:80
+t=0 0
+m=audio 22110 RTP/AVP 0 101
+b=TIAS:64000
+a=rtpmap:0 PCMU/8000
+a=rtpmap:101 telephone-event/8000
+a=fmtp:101 0-15
+
+--------------------------------------------------------------------------------
+花費時間 = 0.002 ms
+
+
+2022-10-18 10:46:02.1993 
+===================================== TCP/SDP =====================================
+time=[02:46:02.184235] ip=[10.102.7.17]@5060 => [10.102.7.85]@50372, mac=[000C297B7CBE]=>[6C5E3B87C0F6], len=1299
+================================================================================
+SIP/2.0 200 OK
+Via: SIP/2.0/TCP 10.102.7.85:50372;branch=z9hG4bK77a53653
+From: "5005" <sip:5005@10.102.7.17>;tag=6c5e3b87c0f611fa73dbcc6e-37c728f4
+To: <sip:5@10.102.7.17>;tag=3114228~7c16b6c4-e63f-4187-a327-88baa1919a86-30701754
+Date: Wed, 05 Oct 2022 06:12:16 GMT
+Call-ID: 6c5e3b87-c0f6002e-47b622e0-437ee4c6@10.102.7.85
+CSeq: 101 INVITE
+Allow: INVITE, OPTIONS, INFO, BYE, CANCEL, ACK, PRACK, UPDATE, REFER, SUBSCRIBE, NOTIFY
+Allow-Events: presence
+Supported: replaces
+Server: Cisco-CUCM14.0
+Call-Info: <urn:x-cisco-remotecc:callinfo>; security= NotAuthenticated; orientation= to; gci= 1-150708; isVoip; call-instance= 1
+Send-Info: conference, x-cisco-conference
+Session-ID: 413d3ded00105000a0006c5e3b87cf65;remote=39d899e300105000a0006c5e3b87c0f6
+Remote-Party-ID: "5011 82395011" <sip:5011@10.102.7.17>;party=called;screen=yes;privacy=off
+Contact: <sip:5@10.102.7.17:5060;transport=tcp>;+u.sip!devicename.ccm.cisco.com="SEP6C5E3B87CF65"
+Content-Type: application/sdp
+Content-Length: 224
+
+v=0
+o=CiscoSystemsCCM-SIP 3114228 1 IN IP4 10.102.7.17
+s=SIP Call
+c=IN IP4 10.102.7.50
+b=AS:80
+t=0 0
+m=audio 31402 RTP/AVP 0 101
+b=TIAS:64000
+a=rtpmap:0 PCMU/8000
+a=rtpmap:101 telephone-event/8000
+a=fmtp:101 0-15
+
+--------------------------------------------------------------------------------
+花費時間 = 0.0012 ms
+
+
+2022-10-18 10:46:02.2598 
+===================================== TCP =====================================
+time=[02:46:02.244950] ip=[10.102.7.85]@50372 => [10.102.7.17]@5060, mac=[6C5E3B87C0F6]=>[000C297B7CBE], len=759
+================================================================================
+ACK sip:5@10.102.7.17:5060;transport=tcp SIP/2.0
+Via: SIP/2.0/TCP 10.102.7.85:50372;branch=z9hG4bK3726a90f
+From: "5005" <sip:5005@10.102.7.17>;tag=6c5e3b87c0f611fa73dbcc6e-37c728f4
+To: <sip:5@10.102.7.17>;tag=3114228~7c16b6c4-e63f-4187-a327-88baa1919a86-30701754
+Call-ID: 6c5e3b87-c0f6002e-47b622e0-437ee4c6@10.102.7.85
+Max-Forwards: 70
+Session-ID: 39d899e300105000a0006c5e3b87c0f6;remote=413d3ded00105000a0006c5e3b87cf65
+Date: Wed, 05 Oct 2022 06:12:18 GMT
+CSeq: 101 ACK
+User-Agent: Cisco-CP7821/14.0.1
+Remote-Party-ID: "5005" <sip:5005@10.102.7.17>;party=calling;id-type=subscriber;privacy=off;screen=yes
+Content-Length: 0
+Recv-Info: conference
+Recv-Info: x-cisco-conference
+
+
+--------------------------------------------------------------------------------
+花費時間 = 0.0049 ms
+
+
+2022-10-18 10:46:14.3625 
+===================================== TCP =====================================
+time=[02:46:14.348411] ip=[10.102.7.50]@49723 => [10.102.7.17]@5060, mac=[6C5E3B87CF65]=>[000C297B7CBE], len=1514
+================================================================================
+INVITE sip:5005@10.102.7.17:5060;transport=tcp SIP/2.0
+Via: SIP/2.0/TCP 10.102.7.50:49723;branch=z9hG4bK220f3f77
+From: <sip:5011@10.102.7.17>;tag=6c5e3b87cf6501297bf6ee21-63db4f2f
+To: <sip:5005@10.102.7.17>;tag=3114230~7c16b6c4-e63f-4187-a327-88baa1919a86-30701755
+Call-ID: a8577c00-1ee16277-6beed-1107660a@10.102.7.17
+Max-Forwards: 70
+Session-ID: 413d3ded00105000a0006c5e3b87cf65;remote=39d899e300105000a0006c5e3b87c0f6
+Date: Wed, 05 Oct 2022 06:12:31 GMT
+CSeq: 101 INVITE
+User-Agent: Cisco-CP7821/14.0.1
+Contact: <sip:46bef463-2f02-be56-da45-4e66e6722bbb@10.102.7.50:49723;transport=tcp>;+u.sip!devicename.ccm.cisco.com="SEP6C5E3B87CF65"
+Accept: application/sdp
+Allow: ACK,BYE,CANCEL,INVITE,NOTIFY,OPTIONS,REFER,REGISTER,UPDATE,SUBSCRIBE,INFO
+Remote-Party-ID: "5011 82395011" <sip:5011@10.102.7.17>;party=called;id-type=subscriber;privacy=off;screen=yes
+Call-Info: <urn:x-cisco-remotecc:hold>
+Supported: replaces,join,sdp-anat,norefersub,resource-priority,extended-refer,X-cisco-callinfo,X-cisco-serviceuri,X-cisco-escapecodes,X-cisco-service-control,X-cisco-srtp-fallback,X-cisco-monrec,X-cisco-config,X-cisco-sis-7.0.0,X-cisco-xsi-8.5.1
+Allow-Events: kpml,dialog
+Recv-Info: conference
+Recv-Info: x-cisco-conference
+RTP-RxStat: Dur=11,Pkt=598,Oct=102684,LatePkt=1,LostPkt=0,AvgJit=0,VQMetrics="CCR=0.0022;ICR=0.0000;ICRmx=0.0067;CS=1;SCS=0;Ver=0.90;VoRxCodec=G.711 u-la;CID=4;VoPktSizeMs=20;VoPktLost=0;VoPktDis=1;VoOneWayDela
+--------------------------------------------------------------------------------
+花費時間 = 0.0082 ms
+
+
+2022-10-18 10:46:14.3625 
+===================================== TCP =====================================
+time=[02:46:14.348471] ip=[10.102.7.50]@49723 => [10.102.7.17]@5060, mac=[6C5E3B87CF65]=>[000C297B7CBE], len=910
+================================================================================
+yMs=1;maxJitter=0"
+RTP-TxStat: Dur=11,Pkt=596,Oct=95360
+Content-Length: 684
+Content-Type: application/sdp
+Content-Disposition: session;handling=optional
+
+v=0
+o=Cisco-SIPUA 3692 1 IN IP4 10.102.7.50
+s=SIP Call
+b=AS:4064
+t=0 0
+m=audio 31402 RTP/AVP 114 9 113 115 0 8 116 18 101
+c=IN IP4 10.102.7.50
+b=TIAS:64000
+a=rtpmap:114 opus/48000/2
+a=fmtp:114 maxplaybackrate=16000;sprop-maxcapturerate=16000;maxaveragebitrate=64000;stereo=0;sprop-stereo=0;usedtx=0
+a=rtpmap:9 G722/8000
+a=rtpmap:113 AMR-WB/16000
+a=fmtp:113 octet-align=0;mode-change-capability=2
+a=rtpmap:115 AMR-WB/16000
+a=fmtp:115 octet-align=1;mode-change-capability=2
+a=rtpmap:0 PCMU/8000
+a=rtpmap:8 PCMA/8000
+a=rtpmap:116 iLBC/8000
+a=fmtp:116 mode=20
+a=rtpmap:18 G729/8000
+a=fmtp:18 annexb=yes
+a=rtpmap:101 telephone-event/8000
+a=fmtp:101 0-15
+a=sendonly
+
+--------------------------------------------------------------------------------
+花費時間 = 0.0027 ms
+
+
+2022-10-18 10:46:14.3775 
+===================================== TCP =====================================
+time=[02:46:14.362575] ip=[10.102.7.17]@5060 => [10.102.7.50]@49723, mac=[000C297B7CBE]=>[6C5E3B87CF65], len=478
+================================================================================
+SIP/2.0 100 Trying
+Via: SIP/2.0/TCP 10.102.7.50:49723;branch=z9hG4bK220f3f77
+From: <sip:5011@10.102.7.17>;tag=6c5e3b87cf6501297bf6ee21-63db4f2f
+To: <sip:5005@10.102.7.17>;tag=3114230~7c16b6c4-e63f-4187-a327-88baa1919a86-30701755
+Date: Wed, 05 Oct 2022 06:12:31 GMT
+Call-ID: a8577c00-1ee16277-6beed-1107660a@10.102.7.17
+CSeq: 101 INVITE
+Allow-Events: presence
+Server: Cisco-CUCM14.0
+Content-Length: 0
+
+
+--------------------------------------------------------------------------------
+花費時間 = 0.0035 ms
+
+
+2022-10-18 10:46:14.3775 
+===================================== TCP/SDP =====================================
+time=[02:46:14.363075] ip=[10.102.7.17]@5060 => [10.102.7.85]@50372, mac=[000C297B7CBE]=>[6C5E3B87C0F6], len=1452
+================================================================================
+INVITE sip:2fad0dcf-03a3-e62e-a227-f824467cefc6@10.102.7.85:50372;transport=tcp SIP/2.0
+Via: SIP/2.0/TCP 10.102.7.17:5060;branch=z9hG4bK6e46f668843f5
+From: <sip:5@10.102.7.17>;tag=3114228~7c16b6c4-e63f-4187-a327-88baa1919a86-30701754
+To: "5005" <sip:5005@10.102.7.17>;tag=6c5e3b87c0f611fa73dbcc6e-37c728f4
+Date: Wed, 05 Oct 2022 06:12:31 GMT
+Call-ID: 6c5e3b87-c0f6002e-47b622e0-437ee4c6@10.102.7.85
+Supported: timer,resource-priority,replaces
+User-Agent: Cisco-CUCM14.0
+Allow: INVITE, OPTIONS, INFO, BYE, CANCEL, ACK, PRACK, UPDATE, REFER, SUBSCRIBE, NOTIFY
+CSeq: 101 INVITE
+Max-Forwards: 70
+Expires: 180
+Allow-Events: presence
+Session-ID: 413d3ded00105000a0006c5e3b87cf65;remote=39d899e300105000a0006c5e3b87c0f6
+Call-Info: <urn:x-cisco-remotecc:callinfo>; security= NotAuthenticated; orientation= to; gci= 1-150708; isVoip; call-instance= 1
+Min-SE:  1800
+Remote-Party-ID: "5011 82395011" <sip:5011@10.102.7.17>;party=calling;screen=yes;privacy=off
+Contact: <sip:46bef463-2f02-be56-da45-4e66e6722bbb@10.102.7.17:5060;transport=tcp>;+u.sip!devicename.ccm.cisco.com="SEP6C5E3B87CF65"
+Content-Type: application/sdp
+Content-Length: 232
+
+v=0
+o=CiscoSystemsCCM-SIP 3114228 2 IN IP4 10.102.7.17
+s=SIP Call
+c=IN IP4 0.0.0.0
+b=AS:80
+t=0 0
+m=audio 31402 RTP/AVP 0 101
+b=TIAS:64000
+a=rtpmap:0 PCMU/8000
+a=inactive
+a=rtpmap:101 telephone-event/8000
+a=fmtp:101 0-15
+
+--------------------------------------------------------------------------------
+花費時間 = 0.002 ms
+
+
+2022-10-18 10:46:14.3775 
+===================================== TCP/SDP =====================================
+time=[02:46:14.363231] ip=[10.102.7.17]@5060 => [10.102.7.50]@49723, mac=[000C297B7CBE]=>[6C5E3B87CF65], len=1246
+================================================================================
+SIP/2.0 200 OK
+Via: SIP/2.0/TCP 10.102.7.50:49723;branch=z9hG4bK220f3f77
+From: <sip:5011@10.102.7.17>;tag=6c5e3b87cf6501297bf6ee21-63db4f2f
+To: <sip:5005@10.102.7.17>;tag=3114230~7c16b6c4-e63f-4187-a327-88baa1919a86-30701755
+Date: Wed, 05 Oct 2022 06:12:31 GMT
+Call-ID: a8577c00-1ee16277-6beed-1107660a@10.102.7.17
+CSeq: 101 INVITE
+Allow: INVITE, OPTIONS, INFO, BYE, CANCEL, ACK, PRACK, UPDATE, REFER, SUBSCRIBE, NOTIFY
+Allow-Events: presence
+Supported: replaces
+Server: Cisco-CUCM14.0
+Call-Info: <urn:x-cisco-remotecc:callinfo>; security= NotAuthenticated; orientation= from; gci= 1-150708; isVoip; call-instance= 1
+Session-ID: 39d899e300105000a0006c5e3b87c0f6;remote=413d3ded00105000a0006c5e3b87cf65
+Remote-Party-ID: <sip:5005@10.102.7.17>;party=called;screen=yes;privacy=off
+Contact: <sip:5005@10.102.7.17:5060;transport=tcp>;+u.sip!devicename.ccm.cisco.com="SEP6C5E3B87C0F6"
+Content-Type: application/sdp
+Content-Length: 232
+
+v=0
+o=CiscoSystemsCCM-SIP 3114230 2 IN IP4 10.102.7.17
+s=SIP Call
+c=IN IP4 0.0.0.0
+b=AS:80
+t=0 0
+m=audio 22110 RTP/AVP 0 101
+b=TIAS:64000
+a=rtpmap:0 PCMU/8000
+a=inactive
+a=rtpmap:101 telephone-event/8000
+a=fmtp:101 0-15
+
+--------------------------------------------------------------------------------
+花費時間 = 0.0033 ms
+
+
+2022-10-18 10:46:14.3925 
+===================================== TCP =====================================
+time=[02:46:14.378308] ip=[10.102.7.50]@49723 => [10.102.7.17]@5060, mac=[6C5E3B87CF65]=>[000C297B7CBE], len=763
+================================================================================
+ACK sip:5005@10.102.7.17:5060;transport=tcp SIP/2.0
+Via: SIP/2.0/TCP 10.102.7.50:49723;branch=z9hG4bK0ebb9874
+From: <sip:5011@10.102.7.17>;tag=6c5e3b87cf6501297bf6ee21-63db4f2f
+To: <sip:5005@10.102.7.17>;tag=3114230~7c16b6c4-e63f-4187-a327-88baa1919a86-30701755
+Call-ID: a8577c00-1ee16277-6beed-1107660a@10.102.7.17
+Max-Forwards: 70
+Session-ID: 413d3ded00105000a0006c5e3b87cf65;remote=39d899e300105000a0006c5e3b87c0f6
+Date: Wed, 05 Oct 2022 06:12:31 GMT
+CSeq: 101 ACK
+User-Agent: Cisco-CP7821/14.0.1
+Remote-Party-ID: "5011 82395011" <sip:5011@10.102.7.17>;party=called;id-type=subscriber;privacy=off;screen=yes
+Content-Length: 0
+Recv-Info: conference
+Recv-Info: x-cisco-conference
+
+
+--------------------------------------------------------------------------------
+花費時間 = 0.0047 ms
+
+
+2022-10-18 10:46:14.4075 
+===================================== TCP =====================================
+time=[02:46:14.392692] ip=[10.102.7.85]@50372 => [10.102.7.17]@5060, mac=[6C5E3B87C0F6]=>[000C297B7CBE], len=1101
+================================================================================
+SIP/2.0 100 Trying
+Via: SIP/2.0/TCP 10.102.7.17:5060;branch=z9hG4bK6e46f668843f5
+From: <sip:5@10.102.7.17>;tag=3114228~7c16b6c4-e63f-4187-a327-88baa1919a86-30701754
+To: "5005" <sip:5005@10.102.7.17>;tag=6c5e3b87c0f611fa73dbcc6e-37c728f4
+Call-ID: 6c5e3b87-c0f6002e-47b622e0-437ee4c6@10.102.7.85
+Session-ID: 39d899e300105000a0006c5e3b87c0f6;remote=413d3ded00105000a0006c5e3b87cf65
+Date: Wed, 05 Oct 2022 06:12:31 GMT
+CSeq: 101 INVITE
+Server: Cisco-CP7821/14.0.1
+Contact: <sip:2fad0dcf-03a3-e62e-a227-f824467cefc6@10.102.7.85:50372;transport=tcp>;+u.sip!devicename.ccm.cisco.com="SEP6C5E3B87C0F6"
+Allow: ACK,BYE,CANCEL,INVITE,NOTIFY,OPTIONS,REFER,REGISTER,UPDATE,SUBSCRIBE,INFO
+Supported: replaces,join,sdp-anat,norefersub,resource-priority,extended-refer,X-cisco-callinfo,X-cisco-serviceuri,X-cisco-escapecodes,X-cisco-service-control,X-cisco-srtp-fallback,X-cisco-monrec,X-cisco-config,X-cisco-sis-7.0.0,X-cisco-xsi-8.5.1
+Allow-Events: kpml,dialog
+Content-Length: 0
+Recv-Info: conference
+Recv-Info: x-cisco-conference
+
+
+--------------------------------------------------------------------------------
+花費時間 = 0.0056 ms
+
+
+2022-10-18 10:46:14.5136 
+===================================== TCP/SDP =====================================
+time=[02:46:14.498668] ip=[10.102.7.85]@50372 => [10.102.7.17]@5060, mac=[6C5E3B87C0F6]=>[000C297B7CBE], len=1510
+================================================================================
+SIP/2.0 200 OK
+Via: SIP/2.0/TCP 10.102.7.17:5060;branch=z9hG4bK6e46f668843f5
+From: <sip:5@10.102.7.17>;tag=3114228~7c16b6c4-e63f-4187-a327-88baa1919a86-30701754
+To: "5005" <sip:5005@10.102.7.17>;tag=6c5e3b87c0f611fa73dbcc6e-37c728f4
+Call-ID: 6c5e3b87-c0f6002e-47b622e0-437ee4c6@10.102.7.85
+Session-ID: 39d899e300105000a0006c5e3b87c0f6;remote=413d3ded00105000a0006c5e3b87cf65
+Date: Wed, 05 Oct 2022 06:12:31 GMT
+CSeq: 101 INVITE
+Server: Cisco-CP7821/14.0.1
+Contact: <sip:2fad0dcf-03a3-e62e-a227-f824467cefc6@10.102.7.85:50372;transport=tcp>;+u.sip!devicename.ccm.cisco.com="SEP6C5E3B87C0F6"
+Allow: ACK,BYE,CANCEL,INVITE,NOTIFY,OPTIONS,REFER,REGISTER,UPDATE,SUBSCRIBE,INFO
+Remote-Party-ID: "5005" <sip:5005@10.102.7.17>;party=calling;id-type=subscriber;privacy=off;screen=yes
+Supported: replaces,join,sdp-anat,norefersub,resource-priority,extended-refer,X-cisco-callinfo,X-cisco-serviceuri,X-cisco-escapecodes,X-cisco-service-control,X-cisco-srtp-fallback,X-cisco-monrec,X-cisco-config,X-cisco-sis-7.0.0,X-cisco-xsi-8.5.1
+Allow-Events: kpml,dialog
+Recv-Info: conference
+Recv-Info: x-cisco-conference
+Content-Length: 228
+Content-Type: application/sdp
+Content-Disposition: session;handling=optional
+
+v=0
+o=Cisco-SIPUA 12763 1 IN IP4 10.102.7.85
+s=SIP Call
+b=AS:4064
+t=0 0
+m=audio 22110 RTP/AVP 0 101
+c=IN IP4 10.102.7.85
+b=TIAS:64000
+a=rtpmap:0 PCMU/8000
+a=rtpmap:101 telephone-event/8000
+a=fmtp:101 0-15
+a=inactive
+
+--------------------------------------------------------------------------------
+花費時間 = 0.0194 ms
+
+
+2022-10-18 10:46:14.5136 
+===================================== TCP =====================================
+time=[02:46:14.498957] ip=[10.102.7.17]@5060 => [10.102.7.85]@50372, mac=[000C297B7CBE]=>[6C5E3B87C0F6], len=574
+================================================================================
+ACK sip:2fad0dcf-03a3-e62e-a227-f824467cefc6@10.102.7.85:50372;transport=tcp SIP/2.0
+Via: SIP/2.0/TCP 10.102.7.17:5060;branch=z9hG4bK6e4705cbd1b6a
+From: <sip:5@10.102.7.17>;tag=3114228~7c16b6c4-e63f-4187-a327-88baa1919a86-30701754
+To: "5005" <sip:5005@10.102.7.17>;tag=6c5e3b87c0f611fa73dbcc6e-37c728f4
+Date: Wed, 05 Oct 2022 06:12:31 GMT
+Call-ID: 6c5e3b87-c0f6002e-47b622e0-437ee4c6@10.102.7.85
+User-Agent: Cisco-CUCM14.0
+Max-Forwards: 70
+CSeq: 101 ACK
+Allow-Events: presence
+Content-Length: 0
+
+
+--------------------------------------------------------------------------------
+花費時間 = 0.002 ms
+
+
+2022-10-18 10:46:14.5136 
+===================================== TCP =====================================
+time=[02:46:14.499498] ip=[10.102.7.17]@5060 => [10.102.7.85]@50372, mac=[000C297B7CBE]=>[6C5E3B87C0F6], len=1178
+================================================================================
+INVITE sip:2fad0dcf-03a3-e62e-a227-f824467cefc6@10.102.7.85:50372;transport=tcp SIP/2.0
+Via: SIP/2.0/TCP 10.102.7.17:5060;branch=z9hG4bK6e4712986b501
+From: <sip:5@10.102.7.17>;tag=3114228~7c16b6c4-e63f-4187-a327-88baa1919a86-30701754
+To: "5005" <sip:5005@10.102.7.17>;tag=6c5e3b87c0f611fa73dbcc6e-37c728f4
+Date: Wed, 05 Oct 2022 06:12:31 GMT
+Call-ID: 6c5e3b87-c0f6002e-47b622e0-437ee4c6@10.102.7.85
+Supported: timer,resource-priority,replaces
+User-Agent: Cisco-CUCM14.0
+Allow: INVITE, OPTIONS, INFO, BYE, CANCEL, ACK, PRACK, UPDATE, REFER, SUBSCRIBE, NOTIFY
+CSeq: 102 INVITE
+Max-Forwards: 70
+Expires: 180
+Allow-Events: presence
+Call-Info: <urn:x-cisco-remotecc:callinfo>; security= Unknown; orientation= to; gci= 1-150708; isVoip; call-instance= 1
+Min-SE:  1800
+Session-ID: 413d3ded00105000a0006c5e3b87cf65;remote=39d899e300105000a0006c5e3b87c0f6
+Remote-Party-ID: "5011 82395011" <sip:5011@10.102.7.17>;party=calling;screen=yes;privacy=off
+Contact: <sip:46bef463-2f02-be56-da45-4e66e6722bbb@10.102.7.17:5060;transport=tcp>;+u.sip!devicename.ccm.cisco.com="SEP6C5E3B87CF65"
+Content-Length: 0
+
+
+--------------------------------------------------------------------------------
+花費時間 = 0.0068 ms
+
+
+2022-10-18 10:46:14.5895 
+===================================== TCP =====================================
+time=[02:46:14.574688] ip=[10.102.7.85]@50372 => [10.102.7.17]@5060, mac=[6C5E3B87C0F6]=>[000C297B7CBE], len=1101
+================================================================================
+SIP/2.0 100 Trying
+Via: SIP/2.0/TCP 10.102.7.17:5060;branch=z9hG4bK6e4712986b501
+From: <sip:5@10.102.7.17>;tag=3114228~7c16b6c4-e63f-4187-a327-88baa1919a86-30701754
+To: "5005" <sip:5005@10.102.7.17>;tag=6c5e3b87c0f611fa73dbcc6e-37c728f4
+Call-ID: 6c5e3b87-c0f6002e-47b622e0-437ee4c6@10.102.7.85
+Session-ID: 39d899e300105000a0006c5e3b87c0f6;remote=413d3ded00105000a0006c5e3b87cf65
+Date: Wed, 05 Oct 2022 06:12:31 GMT
+CSeq: 102 INVITE
+Server: Cisco-CP7821/14.0.1
+Contact: <sip:2fad0dcf-03a3-e62e-a227-f824467cefc6@10.102.7.85:50372;transport=tcp>;+u.sip!devicename.ccm.cisco.com="SEP6C5E3B87C0F6"
+Allow: ACK,BYE,CANCEL,INVITE,NOTIFY,OPTIONS,REFER,REGISTER,UPDATE,SUBSCRIBE,INFO
+Supported: replaces,join,sdp-anat,norefersub,resource-priority,extended-refer,X-cisco-callinfo,X-cisco-serviceuri,X-cisco-escapecodes,X-cisco-service-control,X-cisco-srtp-fallback,X-cisco-monrec,X-cisco-config,X-cisco-sis-7.0.0,X-cisco-xsi-8.5.1
+Allow-Events: kpml,dialog
+Content-Length: 0
+Recv-Info: conference
+Recv-Info: x-cisco-conference
+
+
+--------------------------------------------------------------------------------
+花費時間 = 0.0054 ms
+
+
+2022-10-18 10:46:14.5895 
+===================================== TCP/SDP =====================================
+time=[02:46:14.574984] ip=[10.102.7.85]@50372 => [10.102.7.17]@5060, mac=[6C5E3B87C0F6]=>[000C297B7CBE], len=519
+================================================================================
+SIP/2.0 200 OK
+Via: SIP/2.0/TCP 10.102.7.17:5060;branch=z9hG4bK6e4712986b501
+From: <sip:5@10.102.7.17>;tag=3114228~7c16b6c4-e63f-4187-a327-88baa1919a86-30701754
+To: "5005" <sip:5005@10.102.7.17>;tag=6c5e3b87c0f611fa73dbcc6e-37c728f4
+Call-ID: 6c5e3b87-c0f6002e-47b622e0-437ee4c6@10.102.7.85
+Session-ID: 39d899e300105000a0006c5e3b87c0f6;remote=413d3ded00105000a0006c5e3b87cf65
+Date: Wed, 05 Oct 2022 06:12:31 GMT
+CSeq: 102 INVITE
+Server: Cisco-CP7821/14.0.1
+Contact: <sip:2fad0dcf-03a3-e62e-a227-f824467cefc6@10.102.7.85:50372;transport=tcp>;+u.sip!devicename.ccm.cisco.com="SEP6C5E3B87C0F6"
+Allow: ACK,BYE,CANCEL,INVITE,NOTIFY,OPTIONS,REFER,REGISTER,UPDATE,SUBSCRIBE,INFO
+Remote-Party-ID: "5005" <sip:5005@10.102.7.17>;party=calling;id-type=subscriber;privacy=off;screen=yes
+Supported: replaces,join,sdp-anat,norefersub,resource-priority,extended-refer,X-cisco-callinfo,X-cisco-serviceuri,X-cisco-escapecodes,X-cisco-service-control,X-cisco-srtp-fallback,X-cisco-monrec,X-cisco-config,X-cisco-sis-7.0.0,X-cisco-xsi-8.5.1
+Allow-Events: kpml,dialog
+Recv-Info: conference
+Recv-Info: x-cisco-conference
+Content-Length: 685
+Content-Type: application/sdp
+Content-Disposition: session;handling=optional
+
+v=0
+o=Cisco-SIPUA 12763 2 IN IP4 10.102.7.85
+s=SIP Call
+b=AS:4064
+t=0 0
+m=audio 22110 RTP/AVP 114 9 113 115 0 8 116 18 101
+c=IN IP4 10.102.7.85
+b=TIAS:64000
+a=rtpmap:114 opus/48000/2
+a=fmtp:114 maxplaybackrate=16000;sprop-maxcapturerate=16000;maxaveragebitrate=64000;stereo=0;sprop-stereo=0;usedtx=0
+a=rtpmap:9 G722/8000
+a=rtpmap:113 AMR-WB/16000
+a=fmtp:113 octet-align=0;mode-change-capability=2
+a=rtpmap:115 AMR-WB/16000
+a=fmtp:115 octet-align=1;mode-change-capability=2
+a=rtpmap:0 PCMU/8000
+a=rtpmap:8 PCMA/8000
+a=rtpmap:116 iLBC/8000
+a=fmtp:116 mode=20
+a=rtpmap:18 G729/8000
+a=fmtp:18 annexb=yes
+a=rtpmap:101 telephone-event/8000
+a=fmtp:101 0-15
+a=sendrecv
+
+--------------------------------------------------------------------------------
+花費時間 = 0.0049 ms
+
+
+2022-10-18 10:46:14.6046 
+===================================== TCP/SDP =====================================
+time=[02:46:14.589595] ip=[10.102.7.17]@5060 => [10.102.7.85]@50372, mac=[000C297B7CBE]=>[6C5E3B87C0F6], len=875
+================================================================================
+ACK sip:2fad0dcf-03a3-e62e-a227-f824467cefc6@10.102.7.85:50372;transport=tcp SIP/2.0
+Via: SIP/2.0/TCP 10.102.7.17:5060;branch=z9hG4bK6e47212b87475
+From: <sip:5@10.102.7.17>;tag=3114228~7c16b6c4-e63f-4187-a327-88baa1919a86-30701754
+To: "5005" <sip:5005@10.102.7.17>;tag=6c5e3b87c0f611fa73dbcc6e-37c728f4
+Date: Wed, 05 Oct 2022 06:12:31 GMT
+Call-ID: 6c5e3b87-c0f6002e-47b622e0-437ee4c6@10.102.7.85
+User-Agent: Cisco-CUCM14.0
+Max-Forwards: 70
+CSeq: 102 ACK
+Allow-Events: presence
+Session-ID: 413d3ded00105000a0006c5e3b87cf65;remote=39d899e300105000a0006c5e3b87c0f6
+Content-Type: application/sdp
+Content-Length: 182
+
+v=0
+o=CiscoSystemsCCM-SIP 3114228 3 IN IP4 10.102.7.17
+s=SIP Call
+c=IN IP4 10.102.7.17
+t=0 0
+m=audio 4000 RTP/AVP 0
+b=TIAS:64000
+a=ptime:20
+a=rtpmap:0 PCMU/8000
+a=sendonly
+
+--------------------------------------------------------------------------------
+花費時間 = 0.0034 ms
+
+
+2022-10-18 10:46:20.7060 
+===================================== TCP =====================================
+time=[02:46:20.691208] ip=[10.102.7.50]@49723 => [10.102.7.17]@5060, mac=[6C5E3B87CF65]=>[000C297B7CBE], len=1022
+================================================================================
+REGISTER sip:10.102.7.17 SIP/2.0
+Via: SIP/2.0/TCP 10.102.7.50:49723;branch=z9hG4bK03351641
+From: <sip:5011@10.102.7.17>;tag=6c5e3b87cf65012a36818ee1-11fdd5c4
+To: <sip:5011@10.102.7.17>
+Call-ID: 6c5e3b87-cf650002-69f574db-49d14e27@10.102.7.50
+Max-Forwards: 70
+Session-ID: beded2ba00105000a0006c5e3b87cf65;remote=00000000000000000000000000000000
+Date: Wed, 05 Oct 2022 06:12:37 GMT
+CSeq: 207 REGISTER
+User-Agent: Cisco-CP7821/14.0.1
+Contact: <sip:46bef463-2f02-be56-da45-4e66e6722bbb@10.102.7.50:49723;transport=tcp>;+sip.instance="<urn:uuid:00000000-0000-0000-0000-6c5e3b87cf65>";+u.sip!devicename.ccm.cisco.com="SEP6C5E3B87CF65";+u.sip!model.ccm.cisco.com="621"
+Supported: replaces,join,sdp-anat,norefersub,resource-priority,extended-refer,X-cisco-callinfo,X-cisco-serviceuri,X-cisco-escapecodes,X-cisco-service-control,X-cisco-srtp-fallback,X-cisco-monrec,X-cisco-config,X-cisco-sis-7.0.0,X-cisco-xsi-8.5.1
+Content-Length: 0
+Expires: 3600
+
+
+--------------------------------------------------------------------------------
+花費時間 = 0.0071 ms
+
+
+2022-10-18 10:46:20.7060 
+===================================== TCP =====================================
+time=[02:46:20.691347] ip=[10.102.7.17]@5060 => [10.102.7.50]@49723, mac=[000C297B7CBE]=>[6C5E3B87CF65], len=377
+================================================================================
+SIP/2.0 100 Trying
+Via: SIP/2.0/TCP 10.102.7.50:49723;branch=z9hG4bK03351641
+From: <sip:5011@10.102.7.17>;tag=6c5e3b87cf65012a36818ee1-11fdd5c4
+To: <sip:5011@10.102.7.17>
+Date: Wed, 05 Oct 2022 06:12:38 GMT
+Call-ID: 6c5e3b87-cf650002-69f574db-49d14e27@10.102.7.50
+CSeq: 207 REGISTER
+Content-Length: 0
+
+
+--------------------------------------------------------------------------------
+花費時間 = 0.0011 ms
+
+
+2022-10-18 10:46:20.7060 
+===================================== TCP =====================================
+time=[02:46:20.691396] ip=[10.102.7.17]@5060 => [10.102.7.50]@49723, mac=[000C297B7CBE]=>[6C5E3B87CF65], len=710
+================================================================================
+SIP/2.0 200 OK
+Via: SIP/2.0/TCP 10.102.7.50:49723;branch=z9hG4bK03351641
+From: <sip:5011@10.102.7.17>;tag=6c5e3b87cf65012a36818ee1-11fdd5c4
+To: <sip:5011@10.102.7.17>;tag=464845251
+Date: Wed, 05 Oct 2022 06:12:38 GMT
+Call-ID: 6c5e3b87-cf650002-69f574db-49d14e27@10.102.7.50
+Server: Cisco-CUCM14.0
+CSeq: 207 REGISTER
+Expires: 120
+Contact: <sip:46bef463-2f02-be56-da45-4e66e6722bbb@10.102.7.50:49723;transport=tcp>;+sip.instance="<urn:uuid:00000000-0000-0000-0000-6c5e3b87cf65>";+u.sip!devicename.ccm.cisco.com="SEP6C5E3B87CF65";+u.sip!model.ccm.cisco.com="621"
+Supported: X-cisco-srtp-fallback,X-cisco-sis-10.0.0
+Content-Length: 0
+
+
+--------------------------------------------------------------------------------
+花費時間 = 0.002 ms
+
+
+2022-10-18 10:46:24.5318 
+===================================== TCP =====================================
+time=[02:46:24.521009] ip=[10.102.7.17]@5060 => [10.102.7.50]@49723, mac=[000C297B7CBE]=>[6C5E3B87CF65], len=1034
+================================================================================
+REFER sip:46bef463-2f02-be56-da45-4e66e6722bbb@10.102.7.50:49723;transport=tcp SIP/2.0
+Via: SIP/2.0/TCP 10.102.7.17:5060;branch=z9hG4bK6e47324f9c12f
+From: <sip:5011@10.102.7.17>;tag=2089508688
+To: <sip:5011@10.102.7.50>
+Call-ID: b6a59800-1ee16277-6beee-1107660a@10.102.7.17
+CSeq: 101 REFER
+Max-Forwards: 70
+Contact: <sip:5011@10.102.7.17:5060;transport=tcp>
+User-Agent: Cisco-CUCM14.0
+Expires: 0
+Refer-To: cid:1234567890@10.102.7.17
+Content-Id: <1234567890@10.102.7.17>
+Require: norefersub
+Content-Type: application/x-cisco-remotecc-request+xml
+Referred-By: <sip:5011@10.102.7.17>
+Content-Length: 349
+
+<x-cisco-remotecc-request>
+<holdreversionreq>
+<dialogid>
+<callid>a8577c00-1ee16277-6beed-1107660a@10.102.7.17</callid>
+<localtag>3114230~7c16b6c4-e63f-4187-a327-88baa1919a86-30701755</localtag>
+<remotetag>6c5e3b87cf6501297bf6ee21-63db4f2f</remotetag>
+</dialogid>
+<revertinterval>10</revertinterval>
+</holdreversionreq>
+</x-cisco-remotecc-request>
+
+
+--------------------------------------------------------------------------------
+花費時間 = 0.0061 ms
+
+
+2022-10-18 10:46:24.6068 
+===================================== TCP =====================================
+time=[02:46:24.592117] ip=[10.102.7.50]@49723 => [10.102.7.17]@5060, mac=[6C5E3B87CF65]=>[000C297B7CBE], len=636
+================================================================================
+SIP/2.0 200 OK
+Via: SIP/2.0/TCP 10.102.7.17:5060;branch=z9hG4bK6e47324f9c12f
+From: <sip:5011@10.102.7.17>;tag=2089508688
+To: <sip:5011@10.102.7.50>;tag=6c5e3b87cf65012b3e45549a-2610e4b7
+Call-ID: b6a59800-1ee16277-6beee-1107660a@10.102.7.17
+Session-ID: beded2ba00105000a0006c5e3b87cf65;remote=00000000000000000000000000000000
+Date: Wed, 05 Oct 2022 06:12:41 GMT
+CSeq: 101 REFER
+Server: Cisco-CP7821/14.0.1
+Contact: <sip:46bef463-2f02-be56-da45-4e66e6722bbb@10.102.7.50:49723;transport=tcp>;+u.sip!devicename.ccm.cisco.com="SEP6C5E3B87CF65"
+Content-Length: 0
+
+
+--------------------------------------------------------------------------------
+花費時間 = 0.0051 ms
+
+
+2022-10-18 10:46:31.1271 
+===================================== TCP/SDP =====================================
+time=[02:46:31.112260] ip=[10.102.7.50]@49723 => [10.102.7.17]@5060, mac=[6C5E3B87CF65]=>[000C297B7CBE], len=644
+================================================================================
+INVITE sip:5005@10.102.7.17:5060;transport=tcp SIP/2.0
+Via: SIP/2.0/TCP 10.102.7.50:49723;branch=z9hG4bK08123b02
+From: <sip:5011@10.102.7.17>;tag=6c5e3b87cf6501297bf6ee21-63db4f2f
+To: <sip:5005@10.102.7.17>;tag=3114230~7c16b6c4-e63f-4187-a327-88baa1919a86-30701755
+Call-ID: a8577c00-1ee16277-6beed-1107660a@10.102.7.17
+Max-Forwards: 70
+Session-ID: 413d3ded00105000a0006c5e3b87cf65;remote=39d899e300105000a0006c5e3b87c0f6
+Date: Wed, 05 Oct 2022 06:12:47 GMT
+CSeq: 102 INVITE
+User-Agent: Cisco-CP7821/14.0.1
+Contact: <sip:46bef463-2f02-be56-da45-4e66e6722bbb@10.102.7.50:49723;transport=tcp>;+u.sip!devicename.ccm.cisco.com="SEP6C5E3B87CF65"
+Accept: application/sdp
+Allow: ACK,BYE,CANCEL,INVITE,NOTIFY,OPTIONS,REFER,REGISTER,UPDATE,SUBSCRIBE,INFO
+Remote-Party-ID: "5011 82395011" <sip:5011@10.102.7.17>;party=called;id-type=subscriber;privacy=off;screen=yes
+Call-Info: <urn:x-cisco-remotecc:resume>
+Supported: replaces,join,sdp-anat,norefersub,resource-priority,extended-refer,X-cisco-callinfo,X-cisco-serviceuri,X-cisco-escapecodes,X-cisco-service-control,X-cisco-srtp-fallback,X-cisco-monrec,X-cisco-config,X-cisco-sis-7.0.0,X-cisco-xsi-8.5.1
+Allow-Events: kpml,dialog
+Recv-Info: conference
+Recv-Info: x-cisco-conference
+Content-Length: 684
+Content-Type: application/sdp
+Content-Disposition: session;handling=optional
+
+v=0
+o=Cisco-SIPUA 7590 2 IN IP4 10.102.7.50
+s=SIP Call
+b=AS:4064
+t=0 0
+m=audio 31402 RTP/AVP 114 9 113 115 0 8 116 18 101
+c=IN IP4 10.102.7.50
+b=TIAS:64000
+a=rtpmap:114 opus/48000/2
+a=fmtp:114 maxplaybackrate=16000;sprop-maxcapturerate=16000;maxaveragebitrate=64000;stereo=0;sprop-stereo=0;usedtx=0
+a=rtpmap:9 G722/8000
+a=rtpmap:113 AMR-WB/16000
+a=fmtp:113 octet-align=0;mode-change-capability=2
+a=rtpmap:115 AMR-WB/16000
+a=fmtp:115 octet-align=1;mode-change-capability=2
+a=rtpmap:0 PCMU/8000
+a=rtpmap:8 PCMA/8000
+a=rtpmap:116 iLBC/8000
+a=fmtp:116 mode=20
+a=rtpmap:18 G729/8000
+a=fmtp:18 annexb=yes
+a=rtpmap:101 telephone-event/8000
+a=fmtp:101 0-15
+a=sendrecv
+
+--------------------------------------------------------------------------------
+花費時間 = 0.0108 ms
+
+
+2022-10-18 10:46:31.1271 
+===================================== TCP =====================================
+time=[02:46:31.117048] ip=[10.102.7.17]@5060 => [10.102.7.50]@49723, mac=[000C297B7CBE]=>[6C5E3B87CF65], len=478
+================================================================================
+SIP/2.0 100 Trying
+Via: SIP/2.0/TCP 10.102.7.50:49723;branch=z9hG4bK08123b02
+From: <sip:5011@10.102.7.17>;tag=6c5e3b87cf6501297bf6ee21-63db4f2f
+To: <sip:5005@10.102.7.17>;tag=3114230~7c16b6c4-e63f-4187-a327-88baa1919a86-30701755
+Date: Wed, 05 Oct 2022 06:12:48 GMT
+Call-ID: a8577c00-1ee16277-6beed-1107660a@10.102.7.17
+CSeq: 102 INVITE
+Allow-Events: presence
+Server: Cisco-CUCM14.0
+Content-Length: 0
+
+
+--------------------------------------------------------------------------------
+花費時間 = 0.0037 ms
+
+
+2022-10-18 10:46:31.1421 
+===================================== TCP/SDP =====================================
+time=[02:46:31.127218] ip=[10.102.7.17]@5060 => [10.102.7.85]@50372, mac=[000C297B7CBE]=>[6C5E3B87C0F6], len=1398
+================================================================================
+INVITE sip:2fad0dcf-03a3-e62e-a227-f824467cefc6@10.102.7.85:50372;transport=tcp SIP/2.0
+Via: SIP/2.0/TCP 10.102.7.17:5060;branch=z9hG4bK6e47452daa962
+From: <sip:5@10.102.7.17>;tag=3114228~7c16b6c4-e63f-4187-a327-88baa1919a86-30701754
+To: "5005" <sip:5005@10.102.7.17>;tag=6c5e3b87c0f611fa73dbcc6e-37c728f4
+Date: Wed, 05 Oct 2022 06:12:48 GMT
+Call-ID: 6c5e3b87-c0f6002e-47b622e0-437ee4c6@10.102.7.85
+Supported: timer,resource-priority,replaces
+User-Agent: Cisco-CUCM14.0
+Allow: INVITE, OPTIONS, INFO, BYE, CANCEL, ACK, PRACK, UPDATE, REFER, SUBSCRIBE, NOTIFY
+CSeq: 103 INVITE
+Max-Forwards: 70
+Expires: 180
+Allow-Events: presence
+Session-ID: 413d3ded00105000a0006c5e3b87cf65;remote=39d899e300105000a0006c5e3b87c0f6
+Call-Info: <urn:x-cisco-remotecc:callinfo>; security= NotAuthenticated; orientation= to; gci= 1-150708; isVoip; call-instance= 1
+Min-SE:  1800
+Remote-Party-ID: "5011 82395011" <sip:5011@10.102.7.17>;party=calling;screen=yes;privacy=off
+Contact: <sip:46bef463-2f02-be56-da45-4e66e6722bbb@10.102.7.17:5060;transport=tcp>;+u.sip!devicename.ccm.cisco.com="SEP6C5E3B87CF65"
+Content-Type: application/sdp
+Content-Length: 178
+
+v=0
+o=CiscoSystemsCCM-SIP 3114228 4 IN IP4 10.102.7.17
+s=SIP Call
+c=IN IP4 0.0.0.0
+t=0 0
+m=audio 4000 RTP/AVP 0
+b=TIAS:64000
+a=ptime:20
+a=rtpmap:0 PCMU/8000
+a=inactive
+
+--------------------------------------------------------------------------------
+花費時間 = 0.0079 ms
+
+
+2022-10-18 10:46:31.1730 
+===================================== TCP =====================================
+time=[02:46:31.158210] ip=[10.102.7.85]@50372 => [10.102.7.17]@5060, mac=[6C5E3B87C0F6]=>[000C297B7CBE], len=1101
+================================================================================
+SIP/2.0 100 Trying
+Via: SIP/2.0/TCP 10.102.7.17:5060;branch=z9hG4bK6e47452daa962
+From: <sip:5@10.102.7.17>;tag=3114228~7c16b6c4-e63f-4187-a327-88baa1919a86-30701754
+To: "5005" <sip:5005@10.102.7.17>;tag=6c5e3b87c0f611fa73dbcc6e-37c728f4
+Call-ID: 6c5e3b87-c0f6002e-47b622e0-437ee4c6@10.102.7.85
+Session-ID: 39d899e300105000a0006c5e3b87c0f6;remote=413d3ded00105000a0006c5e3b87cf65
+Date: Wed, 05 Oct 2022 06:12:47 GMT
+CSeq: 103 INVITE
+Server: Cisco-CP7821/14.0.1
+Contact: <sip:2fad0dcf-03a3-e62e-a227-f824467cefc6@10.102.7.85:50372;transport=tcp>;+u.sip!devicename.ccm.cisco.com="SEP6C5E3B87C0F6"
+Allow: ACK,BYE,CANCEL,INVITE,NOTIFY,OPTIONS,REFER,REGISTER,UPDATE,SUBSCRIBE,INFO
+Supported: replaces,join,sdp-anat,norefersub,resource-priority,extended-refer,X-cisco-callinfo,X-cisco-serviceuri,X-cisco-escapecodes,X-cisco-service-control,X-cisco-srtp-fallback,X-cisco-monrec,X-cisco-config,X-cisco-sis-7.0.0,X-cisco-xsi-8.5.1
+Allow-Events: kpml,dialog
+Content-Length: 0
+Recv-Info: conference
+Recv-Info: x-cisco-conference
+
+
+--------------------------------------------------------------------------------
+花費時間 = 0.0085 ms
+
+
+2022-10-18 10:46:31.2180 
+===================================== TCP/SDP =====================================
+time=[02:46:31.203292] ip=[10.102.7.85]@50372 => [10.102.7.17]@5060, mac=[6C5E3B87C0F6]=>[000C297B7CBE], len=1454
+================================================================================
+SIP/2.0 200 OK
+Via: SIP/2.0/TCP 10.102.7.17:5060;branch=z9hG4bK6e47452daa962
+From: <sip:5@10.102.7.17>;tag=3114228~7c16b6c4-e63f-4187-a327-88baa1919a86-30701754
+To: "5005" <sip:5005@10.102.7.17>;tag=6c5e3b87c0f611fa73dbcc6e-37c728f4
+Call-ID: 6c5e3b87-c0f6002e-47b622e0-437ee4c6@10.102.7.85
+Session-ID: 39d899e300105000a0006c5e3b87c0f6;remote=413d3ded00105000a0006c5e3b87cf65
+Date: Wed, 05 Oct 2022 06:12:47 GMT
+CSeq: 103 INVITE
+Server: Cisco-CP7821/14.0.1
+Contact: <sip:2fad0dcf-03a3-e62e-a227-f824467cefc6@10.102.7.85:50372;transport=tcp>;+u.sip!devicename.ccm.cisco.com="SEP6C5E3B87C0F6"
+Allow: ACK,BYE,CANCEL,INVITE,NOTIFY,OPTIONS,REFER,REGISTER,UPDATE,SUBSCRIBE,INFO
+Remote-Party-ID: "5005" <sip:5005@10.102.7.17>;party=calling;id-type=subscriber;privacy=off;screen=yes
+Supported: replaces,join,sdp-anat,norefersub,resource-priority,extended-refer,X-cisco-callinfo,X-cisco-serviceuri,X-cisco-escapecodes,X-cisco-service-control,X-cisco-srtp-fallback,X-cisco-monrec,X-cisco-config,X-cisco-sis-7.0.0,X-cisco-xsi-8.5.1
+Allow-Events: kpml,dialog
+Recv-Info: conference
+Recv-Info: x-cisco-conference
+Content-Length: 172
+Content-Type: application/sdp
+Content-Disposition: session;handling=optional
+
+v=0
+o=Cisco-SIPUA 12763 3 IN IP4 10.102.7.85
+s=SIP Call
+b=AS:4064
+t=0 0
+m=audio 22110 RTP/AVP 0
+c=IN IP4 10.102.7.85
+b=TIAS:64000
+a=rtpmap:0 PCMU/8000
+a=inactive
+
+--------------------------------------------------------------------------------
+花費時間 = 0.009 ms
+
+
+2022-10-18 10:46:31.2330 
+===================================== TCP =====================================
+time=[02:46:31.218132] ip=[10.102.7.17]@5060 => [10.102.7.85]@50372, mac=[000C297B7CBE]=>[6C5E3B87C0F6], len=574
+================================================================================
+ACK sip:2fad0dcf-03a3-e62e-a227-f824467cefc6@10.102.7.85:50372;transport=tcp SIP/2.0
+Via: SIP/2.0/TCP 10.102.7.17:5060;branch=z9hG4bK6e4751040adc7
+From: <sip:5@10.102.7.17>;tag=3114228~7c16b6c4-e63f-4187-a327-88baa1919a86-30701754
+To: "5005" <sip:5005@10.102.7.17>;tag=6c5e3b87c0f611fa73dbcc6e-37c728f4
+Date: Wed, 05 Oct 2022 06:12:48 GMT
+Call-ID: 6c5e3b87-c0f6002e-47b622e0-437ee4c6@10.102.7.85
+User-Agent: Cisco-CUCM14.0
+Max-Forwards: 70
+CSeq: 103 ACK
+Allow-Events: presence
+Content-Length: 0
+
+
+--------------------------------------------------------------------------------
+花費時間 = 0.0029 ms
+
+
+2022-10-18 10:46:31.2480 
+===================================== TCP =====================================
+time=[02:46:31.233128] ip=[10.102.7.17]@5060 => [10.102.7.85]@50372, mac=[000C297B7CBE]=>[6C5E3B87C0F6], len=1199
+================================================================================
+INVITE sip:2fad0dcf-03a3-e62e-a227-f824467cefc6@10.102.7.85:50372;transport=tcp SIP/2.0
+Via: SIP/2.0/TCP 10.102.7.17:5060;branch=z9hG4bK6e476300a5e8c
+From: <sip:5@10.102.7.17>;tag=3114228~7c16b6c4-e63f-4187-a327-88baa1919a86-30701754
+To: "5005" <sip:5005@10.102.7.17>;tag=6c5e3b87c0f611fa73dbcc6e-37c728f4
+Date: Wed, 05 Oct 2022 06:12:48 GMT
+Call-ID: 6c5e3b87-c0f6002e-47b622e0-437ee4c6@10.102.7.85
+Supported: timer,resource-priority,replaces
+User-Agent: Cisco-CUCM14.0
+Allow: INVITE, OPTIONS, INFO, BYE, CANCEL, ACK, PRACK, UPDATE, REFER, SUBSCRIBE, NOTIFY
+CSeq: 104 INVITE
+Max-Forwards: 70
+Expires: 180
+Allow-Events: presence
+Call-Info: <urn:x-cisco-remotecc:callinfo>; security= NotAuthenticated; orientation= to; gci= 1-150708; isVoip; call-instance= 1
+Min-SE:  1800
+Session-ID: 413d3ded00105000a0006c5e3b87cf65;remote=39d899e300105000a0006c5e3b87c0f6
+Remote-Party-ID: "5011 82395011" <sip:5011@10.102.7.17>;party=calling;screen=yes;privacy=off
+Contact: <sip:46bef463-2f02-be56-da45-4e66e6722bbb@10.102.7.17:5060;transport=tcp>;video;audio;+u.sip!devicename.ccm.cisco.com="SEP6C5E3B87CF65"
+Content-Length: 0
+
+
+--------------------------------------------------------------------------------
+花費時間 = 0.0058 ms
+
+
+2022-10-18 10:46:31.3100 
+===================================== TCP =====================================
+time=[02:46:31.295178] ip=[10.102.7.85]@50372 => [10.102.7.17]@5060, mac=[6C5E3B87C0F6]=>[000C297B7CBE], len=1101
+================================================================================
+SIP/2.0 100 Trying
+Via: SIP/2.0/TCP 10.102.7.17:5060;branch=z9hG4bK6e476300a5e8c
+From: <sip:5@10.102.7.17>;tag=3114228~7c16b6c4-e63f-4187-a327-88baa1919a86-30701754
+To: "5005" <sip:5005@10.102.7.17>;tag=6c5e3b87c0f611fa73dbcc6e-37c728f4
+Call-ID: 6c5e3b87-c0f6002e-47b622e0-437ee4c6@10.102.7.85
+Session-ID: 39d899e300105000a0006c5e3b87c0f6;remote=413d3ded00105000a0006c5e3b87cf65
+Date: Wed, 05 Oct 2022 06:12:47 GMT
+CSeq: 104 INVITE
+Server: Cisco-CP7821/14.0.1
+Contact: <sip:2fad0dcf-03a3-e62e-a227-f824467cefc6@10.102.7.85:50372;transport=tcp>;+u.sip!devicename.ccm.cisco.com="SEP6C5E3B87C0F6"
+Allow: ACK,BYE,CANCEL,INVITE,NOTIFY,OPTIONS,REFER,REGISTER,UPDATE,SUBSCRIBE,INFO
+Supported: replaces,join,sdp-anat,norefersub,resource-priority,extended-refer,X-cisco-callinfo,X-cisco-serviceuri,X-cisco-escapecodes,X-cisco-service-control,X-cisco-srtp-fallback,X-cisco-monrec,X-cisco-config,X-cisco-sis-7.0.0,X-cisco-xsi-8.5.1
+Allow-Events: kpml,dialog
+Content-Length: 0
+Recv-Info: conference
+Recv-Info: x-cisco-conference
+
+
+--------------------------------------------------------------------------------
+花費時間 = 0.0054 ms
+
+
+2022-10-18 10:46:31.3250 
+===================================== TCP/SDP =====================================
+time=[02:46:31.310428] ip=[10.102.7.85]@50372 => [10.102.7.17]@5060, mac=[6C5E3B87C0F6]=>[000C297B7CBE], len=519
+================================================================================
+SIP/2.0 200 OK
+Via: SIP/2.0/TCP 10.102.7.17:5060;branch=z9hG4bK6e476300a5e8c
+From: <sip:5@10.102.7.17>;tag=3114228~7c16b6c4-e63f-4187-a327-88baa1919a86-30701754
+To: "5005" <sip:5005@10.102.7.17>;tag=6c5e3b87c0f611fa73dbcc6e-37c728f4
+Call-ID: 6c5e3b87-c0f6002e-47b622e0-437ee4c6@10.102.7.85
+Session-ID: 39d899e300105000a0006c5e3b87c0f6;remote=413d3ded00105000a0006c5e3b87cf65
+Date: Wed, 05 Oct 2022 06:12:47 GMT
+CSeq: 104 INVITE
+Server: Cisco-CP7821/14.0.1
+Contact: <sip:2fad0dcf-03a3-e62e-a227-f824467cefc6@10.102.7.85:50372;transport=tcp>;+u.sip!devicename.ccm.cisco.com="SEP6C5E3B87C0F6"
+Allow: ACK,BYE,CANCEL,INVITE,NOTIFY,OPTIONS,REFER,REGISTER,UPDATE,SUBSCRIBE,INFO
+Remote-Party-ID: "5005" <sip:5005@10.102.7.17>;party=calling;id-type=subscriber;privacy=off;screen=yes
+Supported: replaces,join,sdp-anat,norefersub,resource-priority,extended-refer,X-cisco-callinfo,X-cisco-serviceuri,X-cisco-escapecodes,X-cisco-service-control,X-cisco-srtp-fallback,X-cisco-monrec,X-cisco-config,X-cisco-sis-7.0.0,X-cisco-xsi-8.5.1
+Allow-Events: kpml,dialog
+Recv-Info: conference
+Recv-Info: x-cisco-conference
+Content-Length: 685
+Content-Type: application/sdp
+Content-Disposition: session;handling=optional
+
+v=0
+o=Cisco-SIPUA 12763 4 IN IP4 10.102.7.85
+s=SIP Call
+b=AS:4064
+t=0 0
+m=audio 22110 RTP/AVP 114 9 113 115 0 8 116 18 101
+c=IN IP4 10.102.7.85
+b=TIAS:64000
+a=rtpmap:114 opus/48000/2
+a=fmtp:114 maxplaybackrate=16000;sprop-maxcapturerate=16000;maxaveragebitrate=64000;stereo=0;sprop-stereo=0;usedtx=0
+a=rtpmap:9 G722/8000
+a=rtpmap:113 AMR-WB/16000
+a=fmtp:113 octet-align=0;mode-change-capability=2
+a=rtpmap:115 AMR-WB/16000
+a=fmtp:115 octet-align=1;mode-change-capability=2
+a=rtpmap:0 PCMU/8000
+a=rtpmap:8 PCMA/8000
+a=rtpmap:116 iLBC/8000
+a=fmtp:116 mode=20
+a=rtpmap:18 G729/8000
+a=fmtp:18 annexb=yes
+a=rtpmap:101 telephone-event/8000
+a=fmtp:101 0-15
+a=sendrecv
+
+--------------------------------------------------------------------------------
+花費時間 = 0.0079 ms
+
+
+2022-10-18 10:46:31.3250 
+===================================== TCP/SDP =====================================
+time=[02:46:31.315606] ip=[10.102.7.17]@5060 => [10.102.7.85]@50372, mac=[000C297B7CBE]=>[6C5E3B87C0F6], len=917
+================================================================================
+ACK sip:2fad0dcf-03a3-e62e-a227-f824467cefc6@10.102.7.85:50372;transport=tcp SIP/2.0
+Via: SIP/2.0/TCP 10.102.7.17:5060;branch=z9hG4bK6e4771357971f
+From: <sip:5@10.102.7.17>;tag=3114228~7c16b6c4-e63f-4187-a327-88baa1919a86-30701754
+To: "5005" <sip:5005@10.102.7.17>;tag=6c5e3b87c0f611fa73dbcc6e-37c728f4
+Date: Wed, 05 Oct 2022 06:12:48 GMT
+Call-ID: 6c5e3b87-c0f6002e-47b622e0-437ee4c6@10.102.7.85
+User-Agent: Cisco-CUCM14.0
+Max-Forwards: 70
+CSeq: 104 ACK
+Allow-Events: presence
+Session-ID: 413d3ded00105000a0006c5e3b87cf65;remote=39d899e300105000a0006c5e3b87c0f6
+Content-Type: application/sdp
+Content-Length: 224
+
+v=0
+o=CiscoSystemsCCM-SIP 3114228 5 IN IP4 10.102.7.17
+s=SIP Call
+c=IN IP4 10.102.7.50
+b=AS:80
+t=0 0
+m=audio 31402 RTP/AVP 0 101
+b=TIAS:64000
+a=rtpmap:0 PCMU/8000
+a=rtpmap:101 telephone-event/8000
+a=fmtp:101 0-15
+
+--------------------------------------------------------------------------------
+花費時間 = 0.0057 ms
+
+
+2022-10-18 10:46:31.3250 
+===================================== TCP/SDP =====================================
+time=[02:46:31.315661] ip=[10.102.7.17]@5060 => [10.102.7.50]@49723, mac=[000C297B7CBE]=>[6C5E3B87CF65], len=1229
+================================================================================
+SIP/2.0 200 OK
+Via: SIP/2.0/TCP 10.102.7.50:49723;branch=z9hG4bK08123b02
+From: <sip:5011@10.102.7.17>;tag=6c5e3b87cf6501297bf6ee21-63db4f2f
+To: <sip:5005@10.102.7.17>;tag=3114230~7c16b6c4-e63f-4187-a327-88baa1919a86-30701755
+Date: Wed, 05 Oct 2022 06:12:48 GMT
+Call-ID: a8577c00-1ee16277-6beed-1107660a@10.102.7.17
+CSeq: 102 INVITE
+Allow: INVITE, OPTIONS, INFO, BYE, CANCEL, ACK, PRACK, UPDATE, REFER, SUBSCRIBE, NOTIFY
+Allow-Events: presence
+Supported: replaces
+Server: Cisco-CUCM14.0
+Call-Info: <urn:x-cisco-remotecc:callinfo>; security= Unknown; orientation= from; gci= 1-150708; isVoip; call-instance= 1
+Session-ID: 39d899e300105000a0006c5e3b87c0f6;remote=413d3ded00105000a0006c5e3b87cf65
+Remote-Party-ID: <sip:5005@10.102.7.17>;party=called;screen=yes;privacy=off
+Contact: <sip:5005@10.102.7.17:5060;transport=tcp>;+u.sip!devicename.ccm.cisco.com="SEP6C5E3B87C0F6"
+Content-Type: application/sdp
+Content-Length: 224
+
+v=0
+o=CiscoSystemsCCM-SIP 3114230 3 IN IP4 10.102.7.17
+s=SIP Call
+c=IN IP4 10.102.7.85
+b=AS:80
+t=0 0
+m=audio 22110 RTP/AVP 0 101
+b=TIAS:64000
+a=rtpmap:0 PCMU/8000
+a=rtpmap:101 telephone-event/8000
+a=fmtp:101 0-15
+
+--------------------------------------------------------------------------------
+花費時間 = 0.0043 ms
+
+
+2022-10-18 10:46:31.3250 
+===================================== TCP =====================================
+time=[02:46:31.315752] ip=[10.102.7.50]@49723 => [10.102.7.17]@5060, mac=[6C5E3B87CF65]=>[000C297B7CBE], len=763
+================================================================================
+ACK sip:5005@10.102.7.17:5060;transport=tcp SIP/2.0
+Via: SIP/2.0/TCP 10.102.7.50:49723;branch=z9hG4bK1d65dd6d
+From: <sip:5011@10.102.7.17>;tag=6c5e3b87cf6501297bf6ee21-63db4f2f
+To: <sip:5005@10.102.7.17>;tag=3114230~7c16b6c4-e63f-4187-a327-88baa1919a86-30701755
+Call-ID: a8577c00-1ee16277-6beed-1107660a@10.102.7.17
+Max-Forwards: 70
+Session-ID: 413d3ded00105000a0006c5e3b87cf65;remote=39d899e300105000a0006c5e3b87c0f6
+Date: Wed, 05 Oct 2022 06:12:48 GMT
+CSeq: 102 ACK
+User-Agent: Cisco-CP7821/14.0.1
+Remote-Party-ID: "5011 82395011" <sip:5011@10.102.7.17>;party=called;id-type=subscriber;privacy=off;screen=yes
+Content-Length: 0
+Recv-Info: conference
+Recv-Info: x-cisco-conference
+
+
+--------------------------------------------------------------------------------
+花費時間 = 0.002 ms
+
+
+2022-10-18 10:46:40.3228 
+===================================== TCP =====================================
+time=[02:46:40.314111] ip=[10.102.7.85]@50372 => [10.102.7.17]@5060, mac=[6C5E3B87C0F6]=>[000C297B7CBE], len=1196
+================================================================================
+NOTIFY sip:5005@10.102.7.17 SIP/2.0
+Via: SIP/2.0/TCP 10.102.7.85:50372;branch=z9hG4bK7153c37d
+To: "5005" <sip:5005@10.102.7.17>
+From: "5005" <sip:5005@10.102.7.17>;tag=6c5e3b87c0f611fd6526043b-6175aa09
+Call-ID: 4604fbb9-1882341f@10.102.7.85
+Session-ID: 3119979c00105000a0006c5e3b87c0f6;remote=00000000000000000000000000000000
+Date: Wed, 05 Oct 2022 06:12:56 GMT
+CSeq: 88 NOTIFY
+Event: dialog
+Subscription-State: active
+Max-Forwards: 70
+Contact: <sip:2fad0dcf-03a3-e62e-a227-f824467cefc6@10.102.7.85:50372;transport=tcp>;+u.sip!devicename.ccm.cisco.com="SEP6C5E3B87C0F6"
+Allow: ACK,BYE,CANCEL,INVITE,NOTIFY,OPTIONS,REFER,REGISTER,UPDATE,SUBSCRIBE
+Content-Length: 357
+Content-Type: application/dialog-info+xml
+Content-Disposition: session;handling=required
+
+<?xml version="1.0" encoding="UTF-8" ?>
+<dialog-info xmlns:call="urn:x-cisco:parmams:xml:ns:dialog-info:dialog:callinfo-dialog" version="87" state="partial" entity="sip:5005@10.102.7.85">
+<dialog id="51" call-id="6c5e3b87-c0f6002e-47b622e0-437ee4c6@10.102.7.85" local-tag="6c5e3b87c0f611fa73dbcc6e-37c728f4"><state>terminated</state></dialog>
+</dialog-info>
+--------------------------------------------------------------------------------
+花費時間 = 0.013 ms
+
+
+2022-10-18 10:46:40.3378 
+===================================== TCP =====================================
+time=[02:46:40.323020] ip=[10.102.7.17]@5060 => [10.102.7.85]@50372, mac=[000C297B7CBE]=>[6C5E3B87C0F6], len=404
+================================================================================
+SIP/2.0 200 OK
+Via: SIP/2.0/TCP 10.102.7.85:50372;branch=z9hG4bK7153c37d
+From: "5005" <sip:5005@10.102.7.17>;tag=6c5e3b87c0f611fd6526043b-6175aa09
+To: "5005" <sip:5005@10.102.7.17>;tag=891484816
+Date: Wed, 05 Oct 2022 06:12:57 GMT
+Call-ID: 4604fbb9-1882341f@10.102.7.85
+CSeq: 88 NOTIFY
+Server: Cisco-CUCM14.0
+Content-Length: 0
+
+
+--------------------------------------------------------------------------------
+花費時間 = 0.007 ms
+
+
+2022-10-18 10:46:40.3378 
+===================================== TCP =====================================
+time=[02:46:40.323497] ip=[10.102.7.85]@50372 => [10.102.7.17]@5060, mac=[6C5E3B87C0F6]=>[000C297B7CBE], len=901
+================================================================================
+BYE sip:46bef463-2f02-be56-da45-4e66e6722bbb@10.102.7.17:5060;transport=tcp SIP/2.0
+Via: SIP/2.0/TCP 10.102.7.85:50372;branch=z9hG4bK2772ac18
+From: "5005" <sip:5005@10.102.7.17>;tag=6c5e3b87c0f611fa73dbcc6e-37c728f4
+To: <sip:5@10.102.7.17>;tag=3114228~7c16b6c4-e63f-4187-a327-88baa1919a86-30701754
+Call-ID: 6c5e3b87-c0f6002e-47b622e0-437ee4c6@10.102.7.85
+Max-Forwards: 70
+Session-ID: 39d899e300105000a0006c5e3b87c0f6;remote=413d3ded00105000a0006c5e3b87cf65
+Date: Wed, 05 Oct 2022 06:12:56 GMT
+CSeq: 102 BYE
+User-Agent: Cisco-CP7821/14.0.1
+Content-Length: 0
+RTP-RxStat: Dur=9,Pkt=447,Oct=76712,LatePkt=1,LostPkt=0,AvgJit=0,VQMetrics="CCR=0.0000;ICR=0.0000;ICRmx=0.0000;CS=0;SCS=0;Ver=0.90;VoRxCodec=G.711 u-la;CID=4;VoPktSizeMs=20;VoPktLost=0;VoPktDis=1;VoOneWayDelayMs=0;maxJitter=0"
+RTP-TxStat: Dur=9,Pkt=447,Oct=71520
+
+
+--------------------------------------------------------------------------------
+花費時間 = 0.0103 ms
+
+
+2022-10-18 10:46:40.3378 
+===================================== TCP =====================================
+time=[02:46:40.323541] ip=[10.102.7.17]@5060 => [10.102.7.50]@49723, mac=[000C297B7CBE]=>[6C5E3B87CF65], len=653
+================================================================================
+BYE sip:46bef463-2f02-be56-da45-4e66e6722bbb@10.102.7.50:49723;transport=tcp SIP/2.0
+Via: SIP/2.0/TCP 10.102.7.17:5060;branch=z9hG4bK6e47a1c798c83
+From: <sip:5005@10.102.7.17>;tag=3114230~7c16b6c4-e63f-4187-a327-88baa1919a86-30701755
+To: <sip:5011@10.102.7.17>;tag=6c5e3b87cf6501297bf6ee21-63db4f2f
+Date: Wed, 05 Oct 2022 06:12:48 GMT
+Call-ID: a8577c00-1ee16277-6beed-1107660a@10.102.7.17
+User-Agent: Cisco-CUCM14.0
+Max-Forwards: 70
+CSeq: 102 BYE
+Reason: Q.850;cause=16
+Session-ID: 39d899e300105000a0006c5e3b87c0f6;remote=413d3ded00105000a0006c5e3b87cf65
+Content-Length: 0
+
+
+--------------------------------------------------------------------------------
+花費時間 = 0.0044 ms
+
+
+2022-10-18 10:46:40.3378 
+===================================== TCP =====================================
+time=[02:46:40.323624] ip=[10.102.7.17]@5060 => [10.102.7.85]@50372, mac=[000C297B7CBE]=>[6C5E3B87C0F6], len=454
+================================================================================
+SIP/2.0 200 OK
+Via: SIP/2.0/TCP 10.102.7.85:50372;branch=z9hG4bK2772ac18
+From: "5005" <sip:5005@10.102.7.17>;tag=6c5e3b87c0f611fa73dbcc6e-37c728f4
+To: <sip:5@10.102.7.17>;tag=3114228~7c16b6c4-e63f-4187-a327-88baa1919a86-30701754
+Date: Wed, 05 Oct 2022 06:12:57 GMT
+Call-ID: 6c5e3b87-c0f6002e-47b622e0-437ee4c6@10.102.7.85
+Server: Cisco-CUCM14.0
+CSeq: 102 BYE
+Content-Length: 0
+
+
+--------------------------------------------------------------------------------
+花費時間 = 0.0057 ms
+
+
+2022-10-18 10:46:40.4587 
+===================================== TCP =====================================
+time=[02:46:40.444169] ip=[10.102.7.50]@49723 => [10.102.7.17]@5060, mac=[6C5E3B87CF65]=>[000C297B7CBE], len=807
+================================================================================
+SIP/2.0 200 OK
+Via: SIP/2.0/TCP 10.102.7.17:5060;branch=z9hG4bK6e47a1c798c83
+From: <sip:5005@10.102.7.17>;tag=3114230~7c16b6c4-e63f-4187-a327-88baa1919a86-30701755
+To: <sip:5011@10.102.7.17>;tag=6c5e3b87cf6501297bf6ee21-63db4f2f
+Call-ID: a8577c00-1ee16277-6beed-1107660a@10.102.7.17
+Session-ID: 413d3ded00105000a0006c5e3b87cf65;remote=39d899e300105000a0006c5e3b87c0f6
+Date: Wed, 05 Oct 2022 06:12:57 GMT
+CSeq: 102 BYE
+Server: Cisco-CP7821/14.0.1
+Content-Length: 0
+RTP-RxStat: Dur=9,Pkt=448,Oct=76884,LatePkt=1,LostPkt=0,AvgJit=0,VQMetrics="CCR=0.0011;ICR=0.0000;ICRmx=0.0037;CS=1;SCS=0;Ver=0.90;VoRxCodec=G.711 u-la;CID=4;VoPktSizeMs=20;VoPktLost=0;VoPktDis=1;VoOneWayDelayMs=0;maxJitter=0"
+RTP-TxStat: Dur=9,Pkt=448,Oct=71680
+
+
+--------------------------------------------------------------------------------
+花費時間 = 0.0048 ms
+
+
+2022-10-18 15:24:20.8816 
+2022-10-18 15:24:20.8816 ********** PcapDevice[9] is now opening ... **********
+2022-10-18 15:24:20.8816 	 Name = \Device\NPF_{5E41CED4-6DED-440D-867F-06441F7FC5EA}
+2022-10-18 15:24:20.8816 	 MacAddress = F02F74329D71
+2022-10-18 15:24:20.8816 	 IP = 169.254.239.9
+2022-10-18 15:24:20.8816 	 ReadTimeoutMilliseconds = 2
+2022-10-18 15:24:20.8816 	 DeviceModes = None
+2022-10-18 15:24:20.8949 	 Set Filter = ip and not broadcast and not multicast and not arp and (net 192.168.10.0/24 or net 10.102.7.0/24) and (tcp port 5060 or udp portrange 16384-65535)
+2022-10-18 15:24:20.8949 ========== Start Capture ... ==========

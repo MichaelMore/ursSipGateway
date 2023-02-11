@@ -1,0 +1,560 @@
+﻿using NLog;
+using SharpPcap;
+using WorkerThread;
+using Project.Models;
+using Project.ProjectCtrl;
+using Project.Enums;
+using Newtonsoft.Json;
+using Project.Lib;
+using Org.BouncyCastle.Ocsp;
+using WebSocketSharp;
+using static System.Net.WebRequestMethods;
+using System;
+using SIPSorcery.Net;
+using System.Threading.Tasks.Dataflow;
+using ursSipParser.Models;
+using Project.Helpers;
+
+namespace ThreadWorker
+{
+    public class DispatchPacketThread: IWorker
+    {
+        // protect
+        protected volatile bool _shouldStop;
+        protected volatile bool _shouldPause;
+
+        // private
+        private string Tag;
+        private Thread _myThread;
+
+        private NLog.Logger _sipDetailLog;
+        private NLog.Logger _sipLog;
+        private NLog.Logger _dialogLog;
+        private NLog.Logger _rtpLog;
+        
+        private ILiveDevice _pcapDevice = null;                
+        private PcapDeviceModel _pcapModel = null;
+        private SegmentPacket _segmentPacket = new SegmentPacket();
+        private ulong _packetIndex = 0;
+
+        // public
+        public WorkerState State { get; internal set; }       
+        public int PcapDeviceIndex;
+
+        // 用來管理/紀錄 RTP 開始錄音的物件(Key = CallID)，一支分機可能有好幾個 CallID 同時錄音，
+        // 注意: 這裡的 List，因為封包進入處理是 One By One，沒有多執行緒，所以 SipSdpModel 的 Add/Remove 都不需要 Lock
+        private List<SipDialogModel> _sipDialogList = new List<SipDialogModel>();
+
+        public DispatchPacketThread(int pcapDeviceIndex) {            
+            PcapDeviceIndex = pcapDeviceIndex;
+            var devices = CaptureDeviceList.Instance;
+            _pcapDevice = devices[PcapDeviceIndex];
+            _pcapModel = new PcapDeviceModel(_pcapDevice);
+
+            Tag = $"ReadPkt_{_pcapModel.GetFriendlyName()}({_pcapModel.GetIPV4()})";
+            Tag = lib_misc.MakeFilenameValidate(Tag, "_"); // 置換檔案的非法字元
+
+            _sipDetailLog = LogManager.GetLogger($"{Tag}-SIP-Detail");
+            _dialogLog = LogManager.GetLogger($"{Tag}-SIP-Dialog");
+            _rtpLog = LogManager.GetLogger($"{Tag}-RTP");
+            _sipLog = LogManager.GetLogger($"{Tag}-SIP");
+        }
+
+        public void StartThread() {
+            _myThread = new Thread(this.DoWork) {
+                IsBackground = true,
+                Name = Tag
+            };
+            State = WorkerState.Starting;
+            _myThread.Start();
+        }
+
+        public void StopThread() {
+            RequestStop(); // stopping ...
+
+            if (_pcapDevice.Started)
+                _pcapDevice.Close();
+
+            _sipDetailLog.Info($"{Tag} is waiting to stop(join) ...");
+            _myThread.Join();
+            State = WorkerState.Stopped; // stopped !!!
+        }
+
+        public virtual void DoWork(object anObject) {            
+            _sipDetailLog.Info("");
+            _sipDetailLog.Info($"********** PcapDevice[{PcapDeviceIndex}] is now opening ... **********");
+            _sipDetailLog.Info($"\t Name = {_pcapDevice.Name}");
+            _sipDetailLog.Info($"\t MacAddress = {_pcapModel.GetMac()}");
+            _sipDetailLog.Info($"\t IP = {_pcapModel.GetIPV4()}");
+            //Register our handler function to the 'packet arrival' event
+            _pcapDevice.OnPacketArrival += new PacketArrivalEventHandler(device_OnPacketArrival);
+
+            // Set ReadTimeoutMilliseconds
+            int readTimeoutMilliseconds = GetReadPacketTimeoutMs();
+            _sipDetailLog.Info($"\t ReadTimeoutMilliseconds = {readTimeoutMilliseconds}");
+
+            // Set DeviceModes
+            DeviceModes deviceMode = GlobalVar.AppSettings.Monitor.EnablePromiscuousModel ? DeviceModes.Promiscuous : DeviceModes.None;
+            _sipDetailLog.Info($"\t DeviceModes = {deviceMode}");
+            _pcapDevice.Open(deviceMode, readTimeoutMilliseconds);            
+
+            var pcapFilter = GetPcapFilter(); 
+            _sipDetailLog.Info($"\t Set Filter = {pcapFilter}");
+            try {
+                _pcapDevice.Filter = pcapFilter;
+            }
+            catch (Exception ex) {
+                _sipDetailLog.Info($"\t Filter 設定錯誤: {ex.Message}");
+                _sipDetailLog.Info($"程序中止");
+                return;
+            }
+
+            _sipDetailLog.Info($"========== Start Capture ... ==========");
+            _pcapDevice.Capture(); // <= 取封包的迴圈會卡在此處 ...，所以不需要 While Loop
+            _sipDetailLog.Info($"========== End Capture ... ==========");
+            _pcapDevice.Close();
+        }
+
+        // Callback: 處理封包
+        private void device_OnPacketArrival(object sender, PacketCapture e) {
+            var packetInfo = new PacketInfoModel(e);
+            if (!packetInfo.CaptureSuccess)
+                return;
+
+            #region 檢查封包是否在監控清單中 && Payload 要有資料
+                // 該設備的 IP或 MAC 不在監控清單中
+                // *** 如果設定是用 mac 來監控設備，這裡也會過濾，但後續都是以 ip 進行，所以就不用再管 mac 了
+            if (!packetInfo.CheckIpOrMacIsMonitoring()) 
+                return;
+            // 沒有 payload
+            if (string.IsNullOrEmpty(packetInfo.PayLoadStr))
+                return;
+            #endregion
+
+            // sip command by TCP(看 appsettings.json 設定)
+            if (packetInfo.IPType == ENUM_IPType.TCP) { // TCP 封包               
+                if (GlobalVar.AppSettings.Monitor.SipProtocol.ToLower() == "tcp") {
+                    #region 處理 SIP Command
+                    if (packetInfo.CheckIfSipPort()) {                        
+                        ProcessSipCommand(ref packetInfo);  //從封包中過濾，產生 SipSdpModel 放入 SipSdpList 中
+                    }
+                    #endregion                                    
+                }
+                return;
+            }
+
+            // sip command by UDP(看 appsettings.json 設定)...> 也會有封包分割問題
+            // 但如果 udp 不是 sip command，而是 rtp 時(只有 160 或 320 bytes)，理論上不用處理 Frame 分割的問題，因為一般封包超過576才會被分割
+            // 參考: https://stackoverflow.com/questions/17938623/tcp-and-udp-segmentation
+            if (packetInfo.IPType == ENUM_IPType.UDP) {                
+                #region 處理 SIP Command
+                if (packetInfo.CheckIfSipPort()) {                    
+                    ProcessSipCommand(ref packetInfo); //從封包中過濾，產生 SipSdpModel 放入 SipSdpList 中
+                    return;
+                }
+                #endregion
+
+                //處理 RTP          
+                ProcessRtp(ref packetInfo);                
+            }
+        }
+
+        private void ProcessRtp(ref PacketInfoModel pktInfo) {
+            // RTP Header = 12 bytes，後面接著才是語音 RawData
+            if (pktInfo.udp.PayloadData.Length <= 12) {
+                return;
+            }
+
+            // 產生 RTP 物件，含 RTP Header                 
+            pktInfo.SetRtp();
+
+            var srcIp = pktInfo.SrcIp;
+            var srcPort = pktInfo.SrcPort;
+            var dstIp = pktInfo.DstIp;
+            var dstPort = pktInfo.DstPort;
+
+            // 注意: 此時的封包只有 srcIp/srcMac, dstIp/dstMac 及 RTP Header/RawData ... ，
+            // 但是: _sipDialogList 是根據 SDP 產生的，運作上以 IP 為主，MAC 就不用再管。
+            // 
+            // 問題: 有沒有可能通信中，rtpPort 變更，若有，則會有某些 rtp 漏錄，所以可以思考，是不是可以不要判斷 rtpPort，
+            //       只要 IP 一樣，就錄 rtp(當然要判斷它是不是rtp)...，這個後續再說。
+            
+            // 處理 SrcIp(發話端)
+            var dialog = _sipDialogList.Where(x => x.Ip == srcIp && x.RtpPort == srcPort && x.Status == ENUM_SIP_Dialog_Status.Talking).FirstOrDefault();
+            if (dialog != null) {
+                dialog.TotalPkt++;
+                FindParserToAddRecRtp(dialog, pktInfo, ENUM_IPDir.Source, ENUM_RTP_RecFlag.Recording);
+                //FindMonitorToRtp(dialog.ExtNo, pktInfo, ENUM_IPDir.Source, ENUM_RTP_RecFlag.Recording);
+                WriteRtpLog(pktInfo);
+            }
+
+            // 處理 DstIp(受話端)
+            dialog = _sipDialogList.Where(x => x.Ip == dstIp && x.RtpPort == dstPort && x.Status == ENUM_SIP_Dialog_Status.Talking).FirstOrDefault();
+            if (dialog != null) {
+                dialog.TotalPkt++;
+                FindParserToAddRecRtp(dialog, pktInfo, ENUM_IPDir.Dest, ENUM_RTP_RecFlag.Recording);
+                //FindMonitorToRtp(dialog.ExtNo, pktInfo, ENUM_IPDir.Dest, ENUM_RTP_RecFlag.Recording);
+                WriteRtpLog(pktInfo);
+            }
+        }
+
+        private async Task FindMonitorToRtp(string extNo, PacketInfoModel packetInfo, ENUM_IPDir ipDir, ENUM_RTP_RecFlag recFlag) {
+            // 用分機快速找到 MonitorPacketThread
+            await Task.Delay(TimeSpan.FromMilliseconds(1));
+            if (GlobalVar.dictMonitorThread.TryGetValue(extNo, out MonitorPacketThread mon)) {
+                var monRtp = new MonitorRtpModel() {
+                    IpDir = ipDir,
+                    Flag = recFlag,
+                    Rtp = new RtpModel(packetInfo.PayloadData, packetInfo.CaptureTime)
+                };
+                mon.AddMonitorRtp(monRtp);
+            }
+        }
+
+
+        // 透過 sdpModel.ExtNo 到 dictParseThread 找到對應的 ParsePacketThread(parser)，並新增一個 RecRtp 物件
+        // recFlag:  用來說明這一包是一般RTP 或是(開始、結束錄音)的訊令
+        // ipDir: 指出此封包是屬於監控設備的來源(Src)或目的(Dst)
+        private async Task FindParserToAddRecRtp(SipDialogModel dialog, PacketInfoModel packetInfo, ENUM_IPDir ipDir, ENUM_RTP_RecFlag recFlag) {
+            await Task.Delay(TimeSpan.FromMilliseconds(1));
+            // 用分機快速找到 ParsePacketThread
+            if (GlobalVar.dictParseThread.TryGetValue(dialog.ExtNo, out ParsePacketThread parser)) {             
+                var recRtp = new RecRtpModel() {
+                    PktIndex = 0,
+                    IpDir = ipDir,
+                    ExtNo = dialog.ExtNo,
+                    CallID = dialog.CallID,
+                    SessionID = dialog.SessionID,
+                    StartTalkTime = dialog.StartTalkTime.Value,                    
+                    StopTalkTime = recFlag == ENUM_RTP_RecFlag.StopRec ? DateTime.Now : null,
+                    Flag = recFlag,
+                    Rtp = null,
+                };
+                if (recFlag == ENUM_RTP_RecFlag.StartRec) {
+                    _dialogLog.Info($"新增開始錄音 => extNo={recRtp.ExtNo}, callID={recRtp.CallID}");
+                }
+                else if (recFlag == ENUM_RTP_RecFlag.Recording) {
+                    // 是錄音中才有封包                                        
+                    recRtp.PktIndex = dialog.TotalPkt; // 標註此封包的順序
+                    // 注意順序，先檢查 null 才能檢查 length
+                    if (packetInfo.PayloadData != null && packetInfo.PayloadData.Length > 0)
+                        recRtp.Rtp = new RtpModel(packetInfo.PayloadData, packetInfo.CaptureTime);
+                }
+                else if (recFlag == ENUM_RTP_RecFlag.StopRec) {
+                    _dialogLog.Info($"結束錄音 => extNo={recRtp.ExtNo}, callID={recRtp.CallID}, totalPkt={dialog.TotalPkt}");
+                    recRtp.PktIndex = dialog.TotalPkt; // 結束錄音時，帶入封包總數                    
+                }
+
+                parser.AddRecRtp(recRtp);
+            }
+        }
+
+
+        // 0. 處理 SIP Command
+        private ENUM_SIPCommand ProcessSipCommand(ref PacketInfoModel packetInfo) {
+            if (_packetIndex == ulong.MaxValue)
+                _packetIndex = 1;
+            else
+                _packetIndex++;
+            //
+            // 取得 SIP 資訊
+            packetInfo.SetSip();
+
+            #region 處理 tcp/udp 封包因為長度超過 576 被切成兩個 Segment 的問題            
+            if (packetInfo.SipCmd == ENUM_SIPCommand.S_Incomplete) {
+                _segmentPacket.SetPacket(_packetIndex, packetInfo.PayloadData); // 放入到 _segmentPacket 裡面
+                return ENUM_SIPCommand.S_Incomplete;
+            }
+            else if (_segmentPacket.IsSegmentPacket(_packetIndex)) {
+                packetInfo.InsertFirstSegment(_segmentPacket.PayloadData);
+                _segmentPacket.Reset();
+            }
+            #endregion
+
+            // 取得具有 SDP 資訊的 SIPCommand
+            packetInfo.GetSipCommand();
+
+            // debug ............................................            
+            var s = packetInfo.GetSIPLog();
+            if (!string.IsNullOrEmpty(s))
+                _sipLog.Info(s);
+            // ..................................................
+
+            // 紀錄 SIP Command log
+            if (GlobalVar.AppSettings.Monitor.LogSipCommand) {
+                _sipDetailLog.Info(packetInfo.GetSIPDetailLog());
+            }
+
+            if (packetInfo.SipCmd <= ENUM_SIPCommand.S_Completed)
+                return packetInfo.SipCmd; // 不是 SIPCommand
+            
+            // 紀錄 SDP log
+            if (GlobalVar.AppSettings.Monitor.LogSdpCommand) {
+                _dialogLog.Info(packetInfo.GetSDPLog());
+            }                
+
+            packetInfo.SetSdp(); // 因為封包是SDP，所以取得 CallID, SessionID, RemotePartyID, RtpPort 並填入 packetInfo.SDP                
+
+            // 取得這的封包對應到監控清單:
+            // 因為是 SIP Command，一定是 SipServer 送過來，或送給 SipServer，所以只會有其中一種狀況(SipSvr->設備 or 設備->SipSvr)
+            // 不會存在 srcIP 與 dstIP 都是監控分機的狀況
+            var monDev = packetInfo.GetMonitorDevice(out ENUM_IPDir ipDir);
+            if (monDev == null){ 
+                _dialogLog.Info("****** 系統錯誤: 此封包無法對應到監控清單中分機 ******");
+                return packetInfo.SipCmd;
+            }
+
+            #region 處理 SIP Command            
+
+            if (packetInfo.SipCmd == ENUM_SIPCommand.S_Invite) {
+                ProcessSipCommand_Invite(monDev.Extn, packetInfo, ipDir);
+            }
+            else if (packetInfo.SipCmd == ENUM_SIPCommand.S_200ok) {
+                ProcessSipCommand_200Ok(monDev.Extn, packetInfo, ipDir);
+            }
+            else if (packetInfo.SipCmd == ENUM_SIPCommand.S_Ack) {
+                ProcessSipCommand_Ack(monDev.Extn, packetInfo, ipDir);
+            }
+            else if (packetInfo.SipCmd == ENUM_SIPCommand.S_Bye) {
+                ProcessSipCommand_Bye(packetInfo);
+            }
+            #endregion
+            
+            WriteSipDialogLog();
+            return packetInfo.SipCmd;
+        }
+
+        private SipDialogModel GetDialog(string callID, string fromTag, string toTag) {
+            var dialog = _sipDialogList.Where(x => (x.CallID == callID && x.FromTag == fromTag && x.ToTag == toTag) ||
+                                                   (x.CallID == callID && x.FromTag == toTag && x.ToTag == fromTag))
+                .FirstOrDefault();
+            return dialog;
+        }
+
+
+        // callID + fromTag + toTag 不一樣就是新的 dialog
+        // 注意: 但是 fromTag 與 toTag 顛倒，要視為一樣
+        private SipDialogModel GetDialog(string callID, string fromTag, string toTag, ENUM_SIP_Dialog_Status status) {
+            var dialog = _sipDialogList.Where(x => x.Status == status && ((x.CallID == callID && x.FromTag == fromTag && x.ToTag == toTag) ||
+                                                                          (x.CallID == callID && x.FromTag == toTag && x.ToTag == fromTag)))
+                .FirstOrDefault();
+            return dialog;
+        }
+
+        private SipDialogModel GetDialog(string callID) {
+            var dialog = _sipDialogList.Where(x => x.CallID == callID).FirstOrDefault();
+            return dialog;
+        }
+
+
+        // 1. 處理 SIP Command: Invite ---
+        // --- 主叫端: 主動送出 Invite 給 Server (srcIP 是自己)，此時有 callID，fromTag，但 toTag 是空值，rtpPort 是對外通信的 port
+        private SipDialogModel ProcessSipCommand_Invite(string extNo, PacketInfoModel packetInfo, ENUM_IPDir ipDir) {
+            SipDialogModel dialog = null;
+            var symbol = $"{ipDir.ToDescription()}({extNo})";
+            if (ipDir == ENUM_IPDir.Source) {
+                if (packetInfo.Sip.FromTag != "" && packetInfo.Sip.ToTag == "") {
+                    dialog = GetDialog(packetInfo.Sip.CallID);
+                    if (dialog == null) {
+                        dialog = CreateSipDialog(extNo, true, packetInfo.SrcIp, packetInfo.SrcMac, packetInfo);
+                        _sipDialogList.Add(dialog);
+                        _dialogLog.Info($"{symbol}: 分機主動撥出(Invite)，新增 dialog 物件({JsonConvert.SerializeObject(dialog)})");
+                        return dialog;
+                    }
+                    else {
+                        _dialogLog.Error($"{symbol}: 分機主動撥出(Invite)，但 Call-ID 已經存在.");
+                        return dialog;
+                    }
+                }
+            }
+            //            
+            dialog = GetDialog(packetInfo.Sip.CallID, packetInfo.Sip.FromTag, packetInfo.Sip.ToTag);
+            if (dialog == null) {
+                _dialogLog.Info($"{symbol}: 未知用途的 Invite 命令");                
+            }
+            else {
+                _dialogLog.Info($"{symbol}: [in-dialog]: dialog 物件已存在");                
+            }
+            return dialog;
+        }
+
+        // 2. 處理 SIP Command: 200OK
+        // --- 有兩種狀況:
+        //      1. 主叫端: 主叫端 Invite 後, server 主動回 200OK，所以自己是 dstIP
+        //      2. 被叫端: 被呼叫時，主動回 200OK 給 server，所以自己是 srcIP
+        private SipDialogModel ProcessSipCommand_200Ok(string extNo, PacketInfoModel packetInfo, ENUM_IPDir ipDir) {
+            SipDialogModel dialog = null;
+            var symbol = $"{ipDir.ToDescription()}({extNo})";
+            if (ipDir == ENUM_IPDir.Dest) {                
+                dialog = GetDialog(packetInfo.Sip.CallID, packetInfo.Sip.FromTag, "", ENUM_SIP_Dialog_Status.Waiting); // 對應到主叫端撥出的 Invite，當時的 toTag = ""
+                if (dialog != null) {                
+                    UpdateDialogStartTalking(ref dialog, packetInfo.Sip.ToTag);
+                    _dialogLog.Info($"{symbol}: 收到主叫端 Invite 後，Server 後回傳的 200Ok，設定 Status 及開始通話時間，找到 dialog 物件=>{JsonConvert.SerializeObject(dialog)}");
+                    // 傳送開始錄音訊號
+                    FindParserToAddRecRtp(dialog, null, ENUM_IPDir.Unknown, ENUM_RTP_RecFlag.StartRec); 
+                    return dialog; 
+                }
+                else {
+                    _dialogLog.Error($"{symbol}: 這應該是主叫端 Invite 後，Server 後回傳的 200Ok，倒是找不到 Invite 所建立的 dialog 物件");                    
+                    return null;
+                }
+            }
+            // 被叫端被呼叫時，主動回 200OK 給 server，所以自己是 srcIP
+            else if (ipDir == ENUM_IPDir.Source) {                
+                dialog = GetDialog(packetInfo.Sip.CallID, packetInfo.Sip.FromTag, packetInfo.Sip.ToTag); // 對應到被叫端，要先建立一個 dialog 物件
+                if (dialog == null) {
+                    dialog = CreateSipDialog(extNo, false, packetInfo.SrcIp, packetInfo.SrcMac, packetInfo);
+                    _sipDialogList.Add(dialog);                    
+                    _dialogLog.Info($"{symbol}: 被叫端主動回覆 200OK 給 Server，新增 dialog 物件=>{JsonConvert.SerializeObject(dialog)}");
+                    return dialog;
+                }
+                else {                    
+                    _dialogLog.Error($"{symbol}: 被叫端主動回覆 200OK 給 Server，但 CallID+ FromTag+ ToTag 已經存在 => {JsonConvert.SerializeObject(dialog)}");                    
+                    return dialog; // 因為錯誤，所以 return null
+                }
+            }
+            return null;
+        }
+
+        // 3. 處理 SIP Command: Ack
+        // --- 被叫端，Server 回 ACK (自己是 dstIP)
+        private SipDialogModel ProcessSipCommand_Ack(string extNo, PacketInfoModel packetInfo, ENUM_IPDir ipDir) {
+            SipDialogModel dialog = null;
+            var symbol = $"{ipDir.ToDescription()}({extNo})";
+            if (ipDir != ENUM_IPDir.Dest) {
+                _dialogLog.Info($"{symbol}: 這是被叫端 200OK 後 server 回覆的 ACK，對應的 IP 必須是 DstIP");
+                return null;
+            }
+            
+            dialog = GetDialog(packetInfo.Sip.CallID, packetInfo.Sip.FromTag, packetInfo.Sip.ToTag, ENUM_SIP_Dialog_Status.Waiting); // 對應到被叫端，應該要找到之前建立的 dialog 物件
+            if (dialog != null) {
+                UpdateDialogStartTalking(ref dialog);
+                _dialogLog.Info($"{symbol}: 這是被叫端 200OK 後 server 回覆的 ACK，設定 Status 及開始通話時間，找到的 dialog 物件=>{JsonConvert.SerializeObject(dialog)}");
+                // 傳送開始錄音訊號
+                FindParserToAddRecRtp(dialog, null, ENUM_IPDir.Unknown, ENUM_RTP_RecFlag.StartRec); // 開始錄音的訓令，不用分 Src 或 Dst
+                return dialog;
+            }
+            else {
+                _dialogLog.Info($"{symbol}: 這是被叫端 200OK 後 server 回覆的 ACK，但是找不到 CallID+ FromTag+ ToTag+ Waiting 對應的 dialog 物件");
+                return null;
+            }
+        }
+
+        // 4. 處理 SIP Command: Bye
+        // --- 用該封包的 CallID 找 Rec，找到以後移除 rec，就可以結束錄音
+        private SipDialogModel ProcessSipCommand_Bye(PacketInfoModel packetInfo) {                        
+            var dialog = GetDialog(packetInfo.Sip.CallID, packetInfo.Sip.FromTag, packetInfo.Sip.ToTag); // 對應到被叫端，要先建立一個 dialog 物件
+            if (dialog != null) {
+                // 傳送結束錄音訊號，不需要分 Src/Dst，因為分機如果 SIP:Bye，則 Send/Recv 封包會同時停止。
+                FindParserToAddRecRtp(dialog, null, ENUM_IPDir.Unknown, ENUM_RTP_RecFlag.StopRec);
+                //
+                _dialogLog.Info($"分機={dialog.ExtNo}，找到 dialog 物件=>{JsonConvert.SerializeObject(dialog)}\r\n=> 移除 dialog，結束通話");                
+                _sipDialogList.Remove(dialog);
+                return dialog;
+            }
+            else {
+                _dialogLog.Info($"BYE sip 找不到對應的 CallID+ FromTag+ ToTag");
+                return null;
+            }
+        }
+
+        public void RequestStop() {
+            _sipDetailLog.Info($"{Tag} is requested to stop ...");
+            State = WorkerState.Stopping;
+            _shouldStop = true;
+        }
+
+        // 建立 SipDialogModel
+        private SipDialogModel CreateSipDialog(string extNo, bool invite, string ip, string mac, PacketInfoModel packetInfo) {
+            var sipDialog = new SipDialogModel() {
+                ExtNo = extNo,
+
+                CallID = packetInfo.Sdp.CallID,
+                FromTag = packetInfo.Sip.FromTag,
+                ToTag = packetInfo.Sip.ToTag,
+
+                Invite = invite,
+                Ip = ip,
+                Mac = mac,
+                SessionID = packetInfo.Sdp.SessionID,
+                RtpPort = packetInfo.Sdp.RtpPort,
+                Status = ENUM_SIP_Dialog_Status.Waiting, // 此時因為還在等 200 OK 或 ACK 所以是 Waiting
+                StartTalkTime = null, // 此時因為還在等 200 OK 或 ACK 所以還未開始通話
+            };
+            return sipDialog;
+        }
+
+        // 更新 SipDialogModel 狀態為開始通話
+        private void UpdateDialogStartTalking(ref SipDialogModel dialog) {
+            if (dialog == null)
+                return;
+            dialog.Status = ENUM_SIP_Dialog_Status.Talking;
+            dialog.StartTalkTime = DateTime.Now;
+        }
+
+        private void UpdateDialogStartTalking(ref SipDialogModel dialog, string toTag) {
+            if (dialog == null)
+                return;
+            dialog.Status = ENUM_SIP_Dialog_Status.Talking;
+            dialog.StartTalkTime = DateTime.Now;
+            dialog.ToTag = toTag;
+        }
+
+
+        #region 其他較為不重要的 function
+        // 取得 AppSettings.Monitor.ReadPacketTimeoutMilliSec
+        private int GetReadPacketTimeoutMs() {
+            var ret = GlobalVar.AppSettings.Monitor.ReadPacketTimeoutMilliSec;
+            if (GlobalVar.AppSettings.Monitor.ReadPacketTimeoutMilliSec <= 1)
+                ret = 1;
+            else if (GlobalVar.AppSettings.Monitor.ReadPacketTimeoutMilliSec > 100)
+                ret = 100;
+            return ret;
+        }
+
+        // sample: 
+        // "ip and not broadcast and not multicast and not arp and (net 192.168.10.0/24 or net 10.102.7.0/24) and (tcp port 5060 or udp portrange 16384-65535)"
+        private string GetPcapFilter() {
+            var basicFilter = "ip and not broadcast and not multicast and not arp"; // AppSettings.Monitor 沒設定時用 default
+            if (!string.IsNullOrEmpty(GlobalVar.AppSettings.Monitor.BasicFilter))
+                basicFilter = GlobalVar.AppSettings.Monitor.BasicFilter;
+
+            var mainFilter = $"{basicFilter}";
+            var netFilter = "";
+            if (!lib_misc.IsNullOrEmpty(GlobalVar.AppSettings.Monitor.FilterIPRange)) {
+                netFilter = String.Join(" or net ", GlobalVar.AppSettings.Monitor.FilterIPRange); // 用 or 連接 
+                mainFilter = mainFilter + $" and (net {netFilter})";
+            }
+
+            var sipProto = GlobalVar.AppSettings.Monitor.SipProtocol.ToLower();
+            var sipPort = GlobalVar.AppSettings.Monitor.SipPort;
+            var rtpMinPort = GlobalVar.AppSettings.Monitor.RtpMinPort;
+            var rtpMaxPort = GlobalVar.AppSettings.Monitor.RtpMaxPort;
+            return $"{mainFilter} and ({sipProto} port {sipPort} or udp portrange {rtpMinPort}-{rtpMaxPort})";
+        }
+
+        private async Task WriteRtpLog(PacketInfoModel pktInfo) {
+            await Task.Delay(TimeSpan.FromMilliseconds(1));
+            #region 寫 RTP log
+            if (GlobalVar.AppSettings.Monitor.LogRtpHeader)
+                _rtpLog.Info(pktInfo.GetRTPLog());
+
+            // debug RTP Header (12)bytes                        
+            if (GlobalVar.AppSettings.Monitor.LogRtpHeaderHex)
+                _rtpLog.Info(pktInfo.Rtp.GetHeaderHex());
+            #endregion
+        }
+
+        private void WriteSipDialogLog() {
+            var s = $"===> {_sipDialogList.Count} 個 dialog: \r\n";
+            var index = 0;
+            foreach (var dialog in _sipDialogList) {
+                index++;
+                s = s + $"\t@{index:D3}: {JsonConvert.SerializeObject(dialog)}\r\n";
+            }            
+            _dialogLog.Info(s+ "\r\n\r\n\r\n");
+        }
+        #endregion
+    }
+
+}

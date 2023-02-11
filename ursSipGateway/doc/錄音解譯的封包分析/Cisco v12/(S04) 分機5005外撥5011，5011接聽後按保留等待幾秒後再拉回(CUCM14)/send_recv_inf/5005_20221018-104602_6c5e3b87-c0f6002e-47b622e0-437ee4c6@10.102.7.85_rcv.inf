@@ -1,0 +1,41 @@
+[
+  {
+    "SSRC": "0x84A7D718",
+    "Dir": 2,
+    "StartRtpTimestamp": 1443585185,
+    "EndRtpTimestamp": 1443680865,
+    "StartRtpSeq": 28024,
+    "EndRtpSeq": 28622,
+    "StartTime": "2022/10/18 10:46:02",
+    "EndTime": "2022/10/18 10:46:38",
+    "TotalPacket": 599,
+    "TotalTime": 11.98,
+    "UseTime": 36325.9489
+  },
+  {
+    "SSRC": "0x712",
+    "Dir": 2,
+    "StartRtpTimestamp": 160,
+    "EndRtpTimestamp": 132160,
+    "StartRtpSeq": 1810,
+    "EndRtpSeq": 2635,
+    "StartTime": "2022/10/18 10:46:39",
+    "EndTime": "2022/10/18 10:46:51",
+    "TotalPacket": 826,
+    "TotalTime": 16.52,
+    "UseTime": 12884.8476
+  },
+  {
+    "SSRC": "0xA32E7C27",
+    "Dir": 2,
+    "StartRtpTimestamp": 3243224583,
+    "EndRtpTimestamp": 3243296103,
+    "StartRtpSeq": 11446,
+    "EndRtpSeq": 11893,
+    "StartTime": "2022/10/18 10:46:51",
+    "EndTime": "2022/10/18 10:47:20",
+    "TotalPacket": 448,
+    "TotalTime": 8.96,
+    "UseTime": 28186.203
+  }
+]

@@ -1,0 +1,81 @@
+﻿using NLog;
+using WorkerThread;
+using Project.Models;
+using Project.ProjectCtrl;
+using Project.Enums;
+using Newtonsoft.Json;
+using Project.Lib;
+using ursSipParser.Models;
+using Project.Helpers;
+using WebSocketSharp;
+using SIPSorcery.SIP;
+using NLog.Fluent;
+using System.Net.Sockets;
+using System.Net;
+
+namespace ThreadWorker
+{
+    public class ForwardPacketThread: IWorker
+    {
+        // protect
+        protected volatile bool _shouldStop;
+        protected volatile bool _shouldPause;
+
+        // private
+        private string Tag;
+        private Thread _myThread;        
+        private NLog.Logger _nLog;
+
+        private Socket _sock = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, System.Net.Sockets.ProtocolType.Udp);
+        //private IPEndPoint _udpSend = new IPEndPoint(System.Net.IPAddress.Parse("192.168.10.200"), 6803);
+        //private IPEndPoint _udpRecv = new IPEndPoint(System.Net.IPAddress.Parse("192.168.10.200"), 6813);
+        private Queue<MonitorRtpModel> _monitorRtpQueue = new Queue<MonitorRtpModel>(1000); // 1000 是初始化的大小，不是最高限制，超出會自動增加        
+
+        // public
+        public WorkerState State { get; internal set; }               
+
+        public ForwardPacketThread() {            
+            Tag = "ForwardPacket";
+            _nLog = LogManager.GetLogger($"{Tag}");            
+        }
+
+        public void StartThread() {
+            _myThread = new Thread(this.DoWork) {
+                IsBackground = true,
+                Name = Tag
+            };
+            State = WorkerState.Starting;
+            _myThread.Start();
+        }
+
+        public void StopThread() {
+            RequestStop(); // stopping ...
+            _nLog.Info($"{Tag} is waiting to stop(join) ...");
+            _myThread.Join();
+            State = WorkerState.Stopped; // stopped !!!
+        }
+        
+
+        public virtual async void DoWork(object anObject) {
+            _nLog.Info("");
+            _nLog.Info($"********** {Tag} is now starting ... **********");            
+
+            
+            while (!_shouldStop) {
+                State = WorkerState.Starting;                
+            }
+
+            _nLog.Info($"========== {Tag} terminated. ==========");
+            State = WorkerState.Stopped;
+        }
+
+        public void RequestStop() {
+            _nLog.Info($"{Tag} is requested to stop ...");
+            State = WorkerState.Stopping;
+            _shouldStop = true;
+        }       
+
+       
+    }
+
+}

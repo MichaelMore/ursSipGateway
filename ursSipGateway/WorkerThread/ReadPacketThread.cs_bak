@@ -1,0 +1,265 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using NLog;
+using SharpPcap;
+using PacketDotNet;
+using WorkerThread;
+using ursSipParser.Lib;
+using SharpPcap.LibPcap;
+using Project.Models;
+using NLog.Fluent;
+using System.Net.Sockets;
+using Project.WorkerService;
+using System.Net.NetworkInformation;
+using System.Net;
+using Org.BouncyCastle.Bcpg;
+using Project.ProjectCtrl;
+
+namespace ThreadWorker
+{
+    public class ReadPacketThread: IWorker
+    {
+        // protect
+        protected volatile bool _shouldStop;
+        protected volatile bool _shouldPause;
+
+        // private
+        private Logger _nLog;
+        private string _myClassName;
+        private ILiveDevice _pcapDevice = null;
+        private int _readTimeoutMiSec = 10;
+        private Thread _myThread;
+        private int _exceptionCount = 0;
+        private int _maxExceptionCount = 100;
+        private PcapDeviceModel _pcapModel = null;
+
+        // public
+        public WorkerState State { get; internal set; }       
+        public int PcapDeviceIndex;        
+        public long TotalPackets = 0;
+        
+        public ReadPacketThread(int pcapDeviceIndex) {            
+            PcapDeviceIndex = pcapDeviceIndex;
+            var devices = CaptureDeviceList.Instance;
+            _pcapDevice = devices[PcapDeviceIndex];
+            _pcapModel = new PcapDeviceModel(_pcapDevice);
+            _myClassName = $"ReadPacket#{pcapDeviceIndex}";
+            _nLog = LogManager.GetLogger(_myClassName);            
+        }
+
+        public void StartThread() {
+            _myThread = new Thread(this.DoWork) {
+                IsBackground = true,
+                Name = _myClassName
+            };
+            State = WorkerState.Starting;
+            _myThread.Start();
+        }
+
+        public void StopThread() {
+            RequestStop(); // stopping ...
+            _nLog.Info($"{_myClassName} is waiting to stop(join) ...");
+            _myThread.Join();
+            State = WorkerState.Stopped; // stopped !!!
+        }
+
+        public virtual void DoWork(object anObject) {
+            //var filter = "ip and udp and port not 53 and not arp"; // port 53 is DNS
+            var filter = "ip and not broadcast and not multicast and net 10.102.7.0/24 and port not 53 and not arp and not tcp port 3389"; 
+            _nLog.Info("");
+            _nLog.Info($"********** PcapDevice[{PcapDeviceIndex}] is now opening ... **********");
+            _nLog.Info($"\t Name = {_pcapDevice.Name}");
+            _nLog.Info($"\t MacAddress = {_pcapModel.GetMac()}");            
+            _nLog.Info($"\t IP = {_pcapModel.GetIPV4()}");
+
+            _pcapDevice.Open(DeviceModes.Promiscuous, _readTimeoutMiSec);
+            _pcapDevice.Filter = filter; // *** 設定 Filter ***
+            _nLog.Info($"PcapDevice[{PcapDeviceIndex}].GetNextPacket loop is starting ...");
+            PacketCapture e;
+            GetPacketStatus retVal;
+            RawCapture rawPacket;
+            while (!_shouldStop) {
+                Thread.Sleep(5);
+                State = WorkerState.Running;
+                retVal = _pcapDevice.GetNextPacket(out e);
+                // 檢查是否有取得封包
+                if (retVal != GetPacketStatus.PacketRead) {                    
+                    continue;
+                }
+                rawPacket = e.GetPacket();
+                var time = e.Header.Timeval.Date;
+                var packet = PacketDotNet.Packet.ParsePacket(rawPacket.LinkLayerType, rawPacket.Data);
+                if (packet is PacketDotNet.EthernetPacket eth) {
+                    var ip = packet.Extract<PacketDotNet.IPPacket>();
+                    if (ip != null) {
+                        //_nLog.Info($"get packet: {ip.SourceAddress} => {ip.DestinationAddress}, len = {rawPacket.Data.Length}");
+                        var tcpPacket = packet.Extract<PacketDotNet.TcpPacket>();
+                        if (tcpPacket != null) {
+                            int srcPort = tcpPacket.SourcePort;
+                            int dstPort = tcpPacket.DestinationPort;
+                            if (srcPort == 5060 || dstPort == 5060) {
+                                _nLog.Info($"===> TCP packet: {ip.SourceAddress} => {ip.DestinationAddress}, {srcPort} => {dstPort}, len = {rawPacket.Data.Length}");
+                                _nLog.Info($"@@@@@ time: {time.Hour}.{time.Minute}.{time.Second}.{time.Millisecond}");
+                                var data =  Encoding.UTF8.GetString(tcpPacket.PayloadData);
+                                _nLog.Info($"{data}");
+                                _nLog.Info($"");
+                            }
+                            
+                        }
+                    }
+                }
+            
+
+
+
+                //#region 檢查是否為 Ethernet 的封包
+                //if (!CheckIsEthernetPacket(e, out EthernetPacket eth, out PacketDotNet.Packet packet)) {
+                //    continue;
+                //}
+                //#endregion
+                //var srcMac = eth.SourceHardwareAddress;
+                //var dstMac = eth.DestinationHardwareAddress;
+
+                //#region 檢查是否 IP 封包                
+                //if (!CheckIsIpPacket(packet, out PacketDotNet.IPPacket ipPacket)) {
+                //    continue;
+                //}
+                //#endregion
+                //var srcIp = ipPacket.SourceAddress;
+                //var dstIp = ipPacket.DestinationAddress;
+                //var packetLen = e.GetPacket().Data.Length;
+                //_nLog.Info($"srcIP={srcIp}, dstIP={dstIp}, len={packetLen}");
+
+                //#region 處理 TCP: 
+                //// 檢查 SIP 是否用 TCP:
+                ////      YES: 非 TCP 的 port 要丟棄，
+                ////      NO : TCP 封包一律丟棄
+                //if (GetTcpPacket(packet, out PacketDotNet.TcpPacket tcp)) {                    
+                //    var srcPort = tcp.SourcePort;
+                //    var dstPort = tcp.DestinationPort;                    
+                //    if (GlobalVar.AppSettings.Monitor.SipProtocol.ToLower() == "tcp") {
+                //        if (GlobalVar.AppSettings.Monitor.SipPort == srcPort || GlobalVar.AppSettings.Monitor.SipPort == dstPort) {
+                //            _nLog.Info($"TCP: {srcIp}:{srcPort} => {dstIp}:{dstPort}, len={packetLen}");
+                //            var data = Encoding.UTF8.GetString(tcp.PayloadData);                            
+                //            _nLog.Info($"========== SIP ================================================================");
+                //            _nLog.Info($"{data}");
+                //            _nLog.Info($"===============================================================================\r\n");
+                //            // 找到對應的 ParsePacketThread，Add 封包
+                //        }
+                //    }
+                //    continue;
+                //}
+                //#endregion
+
+                //#region 處理 UDP: 
+                //if (GetUdpPacket(packet, out PacketDotNet.UdpPacket udp)) {
+                //    var srcPort = udp.SourcePort;
+                //    var dstPort = udp.DestinationPort;                    
+                //    if (GlobalVar.AppSettings.Monitor.SipProtocol.ToLower() == "udp") {
+                //        if (GlobalVar.AppSettings.Monitor.SipPort == srcPort || GlobalVar.AppSettings.Monitor.SipPort == dstPort) {
+                //            _nLog.Info($"UDP: {srcIp}:{srcPort} => {dstIp}:{dstPort}, len={packetLen}");
+                //            var data = Encoding.UTF8.GetString(udp.PayloadData);
+                //            _nLog.Info($"========== SIP ================================================================");
+                //            _nLog.Info($"{data}");
+                //            _nLog.Info($"===============================================================================\r\n");
+                //            // 找到對應的 ParsePacketThread，Add 封包
+                //        }
+                //    }
+                //    continue;
+                //}
+                //#endregion         
+                Thread.Sleep(5);
+            }
+            _nLog.Info($"========== PcapDevice[{PcapDeviceIndex}] is going to close ... ==========");
+            _pcapDevice.Close();            
+            State = WorkerState.Stopped;
+            _nLog.Info($"========== PcapDevice[{PcapDeviceIndex}].GetNextPacket is terminated ==========");
+        }
+
+        public void RequestStop() {
+            _nLog.Info($"{_myClassName} is requested to stop ...");
+            State = WorkerState.Stopping;
+            _shouldStop = true;
+        }
+
+        public bool CheckIsEthernetPacket(PacketCapture e, out EthernetPacket eth, out PacketDotNet.Packet packet ) {
+            eth = null;
+            packet = null;
+            var ret = false;
+            try {
+                var rawPacket = e.GetPacket();
+                packet = PacketDotNet.Packet.ParsePacket(rawPacket.LinkLayerType, rawPacket.Data);
+                if (packet is PacketDotNet.EthernetPacket) {
+                    eth = (EthernetPacket)packet;                    
+                    ret = true;
+                }
+            }
+            catch (Exception ex) {
+                ret = false;
+            }
+            return ret;
+        }
+
+        public bool CheckIsIpPacket(PacketDotNet.Packet pkt, out IPPacket ipPacket) {
+            ipPacket = null;
+            var ret = false;
+            try {
+                ipPacket = pkt.Extract<PacketDotNet.IPPacket>();
+                if (ipPacket != null) {
+                    ret = true;
+                }
+            }
+            catch (Exception ex) {
+                ret = false;
+            }
+            return ret;
+        }
+
+        public bool GetTcpPacket(PacketDotNet.Packet pkt, out PacketDotNet.TcpPacket tcp) {
+            tcp = null;
+            var ret = false;
+            try {                
+                tcp = pkt.Extract<PacketDotNet.TcpPacket>();
+                if (tcp != null) {
+                    ret = true;
+                }
+            }
+            catch (Exception ex) {
+                ret = false;
+            }
+            return ret;
+        }
+
+        public bool GetUdpPacket(PacketDotNet.Packet pkt, out PacketDotNet.UdpPacket udp) {
+            udp = null;
+            var ret = false;
+            try {
+                udp = pkt.Extract<PacketDotNet.UdpPacket>();
+                if (udp != null) {
+                    ret = true;
+                }
+            }
+            catch (Exception ex) {
+                ret = false;
+            }
+            return ret;
+        }
+
+        // function not ready
+        //public void RequestPause() {
+        //    State = WorkerState.Paused;
+        //    _shouldPause = true;
+        //}
+
+        // function not ready
+        //public void RequestRestart() {
+        //    State = WorkerState.Started;
+        //    _shouldPause = false;
+        //}
+
+    }
+
+}

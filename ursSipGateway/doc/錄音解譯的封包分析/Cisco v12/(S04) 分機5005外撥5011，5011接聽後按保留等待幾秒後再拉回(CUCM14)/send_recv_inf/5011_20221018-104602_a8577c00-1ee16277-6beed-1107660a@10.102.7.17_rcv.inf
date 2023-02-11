@@ -1,0 +1,28 @@
+[
+  {
+    "SSRC": "0xC6E984AB",
+    "Dir": 2,
+    "StartRtpTimestamp": 3845301621,
+    "EndRtpTimestamp": 3845399061,
+    "StartRtpSeq": 50460,
+    "EndRtpSeq": 51069,
+    "StartTime": "2022/10/18 10:46:02",
+    "EndTime": "2022/10/18 10:46:38",
+    "TotalPacket": 610,
+    "TotalTime": 12.20,
+    "UseTime": 36658.9744
+  },
+  {
+    "SSRC": "0x25459933",
+    "Dir": 2,
+    "StartRtpTimestamp": 3630437627,
+    "EndRtpTimestamp": 3630509147,
+    "StartRtpSeq": 50938,
+    "EndRtpSeq": 51385,
+    "StartTime": "2022/10/18 10:46:39",
+    "EndTime": "2022/10/18 10:47:07",
+    "TotalPacket": 448,
+    "TotalTime": 8.96,
+    "UseTime": 28095.0988
+  }
+]

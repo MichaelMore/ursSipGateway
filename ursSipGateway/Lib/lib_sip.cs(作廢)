@@ -1,0 +1,122 @@
+﻿using Project.Enums;
+using Project.ProjectCtrl;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Project.Lib {
+    internal static class lib_sip {
+
+        public static string GetLineContain(string wholeString, string subString) {
+            var ret = "";
+            var lines = wholeString.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries)
+                            .Where(x => !string.IsNullOrWhiteSpace(x))
+                            .Select(y => y.Trim())
+                            .ToList();
+
+            foreach (string s in lines) {
+                if (s.Contains(subString)) {
+                    ret = s;
+                    break;
+                }
+            }
+            return ret;
+        }
+
+
+        // 以下是針對 StringSplitOptions 的使用說明
+        // 使用 StringSplitOptions.None: 切割時，如果前後沒東西，nullOrEmpty 會被放入陣列
+        // 使用 StringSplitOptions.RemoveEmptyEntries: 切割時，如果前後沒東西，nullOrEmpty *不會*被放入陣列        
+
+
+        //From: "1001" <sip:1001@192.168.2.201>;tag=1892853703
+        public static string GetFromExtNo(string payLoad) {
+            string ext = "";
+            string line = GetLineContain(payLoad, "From:");
+            if (!string.IsNullOrEmpty(line)) {
+                ext = line.Split(new string[] { "sip:" }, StringSplitOptions.RemoveEmptyEntries)[1].Split('@')[0].Trim();
+            }
+            return ext;
+        }
+
+        //v=0
+        //o=1001 8000 8000 IN IP4 192.168.2.101
+        //s=SIP Call
+        //c=IN IP4 192.168.2.101
+        //t=0 0
+        public static string GetConnectIPAddr(string payLoad) {
+            string ext = "";
+            string line = GetLineContain(payLoad, "c=IN");
+            if (!string.IsNullOrEmpty(line)) {
+                ext = line.Split(new string[] { "IP4 " }, StringSplitOptions.RemoveEmptyEntries)[1].Trim();
+            }
+            return ext;
+        }
+
+        // To: <sip:1002@192.168.2.201>
+        public static string GetToExtNo(string payLoad) {
+            string ext = "";
+            string line = GetLineContain(payLoad, "To:");
+            if (!string.IsNullOrEmpty(line)) {                
+                ext = line.Split(new string[] { "sip:" }, StringSplitOptions.RemoveEmptyEntries)[1].Split('@')[0].Trim();
+            }
+            return ext;
+        }
+
+        //Call-ID: 667592008-5060-16@BJC.BGI.C.BAB 或 Call-ID: e7247380-1ed100c0-66268-1107660a@10.102.7.17
+        public static string GetCallID(string payLoad) {
+            string ext = "";
+            string line = GetLineContain(payLoad, "Call-ID");
+            if (!string.IsNullOrEmpty(line)) {
+                // 使用 StringSplitOptions.None 代表 line 會被切成 2 行，第一行是 nullOrEmpty, 第 2 行是 Call-ID
+                // 因為 Call-ID 前面沒東西
+                ext = line.Split(new string[] { "Call-ID:" }, StringSplitOptions.None)[1].Trim();
+            }
+            return ext;
+        }
+
+        //Session-ID: 422184c400105000a0006c5e3b87c5c6;remote=4ea569c100105000a0006c5e3b87c0bd
+        public static string GetSessionID(string payLoad) {
+            string ret = "";
+            string line = GetLineContain(payLoad, "Session-ID");
+            if (!string.IsNullOrEmpty(line)) {
+                // 使用 StringSplitOptions.None 代表 line 會被切成 2 行，第一行是 nullOrEmpty, 第 2 行是 Call-ID
+                // 因為 Call-ID 前面沒東西
+                ret = line.Split(new string[] { "Session-ID:" }, StringSplitOptions.None)[1].Trim();
+            }
+            return ret;
+        }
+
+        //Remote-Party-ID: <sip:5012@10.102.7.17;x-cisco-callback-number=5012>;party=calling;screen=yes;privacy=off
+        public static string GetRemotePartyID(string payLoad) {
+            string ret = "";
+            string line = GetLineContain(payLoad, "Remote-Party-ID");
+            if (!string.IsNullOrEmpty(line)) {                
+                ret = line.Split(new string[] { "Remote-Party-ID:" }, StringSplitOptions.None)[1].Trim();
+            }
+            return ret;
+        }
+
+        // m=audio 21506 RTP/AVP 107 119 0 98 8 3 101 =>取得 Rtp.Port 21506
+        // port 有可能包含斜線, ex: 21506/2
+        public static int GetRTPPort(string payLoad) {
+            int port = 0;
+
+            string line = GetLineContain(payLoad, "m=audio");
+            if (!string.IsNullOrEmpty(line)) {
+                // 使用 StringSplitOptions.None 代表 line 會被切成 2 行，第一行是 nullOrEmpty, 第 2 行是 Call-ID
+                // 因為 Call-ID 前面沒東西
+                var tmp = line.Split(new string[] { "m=audio" }, StringSplitOptions.None)[1]
+                                .Split(new string[] { "RTP/" }, StringSplitOptions.None)[0].Trim()
+                                .Split('/')[0].Trim(); // 移除萬一 port 有包含斜線, ex: 21506/2
+                if (!int.TryParse(tmp, out port))
+                    port = 0;
+            }
+            return port;
+        }
+
+        
+    }
+}

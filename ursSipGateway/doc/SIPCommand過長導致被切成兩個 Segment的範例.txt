@@ -1,0 +1,130 @@
+2022-10-18 15:44:23.5006 
+===================================== TCP/SDP =====================================
+time=[07:44:23.500014] ip=[10.102.7.85]@50372 => [10.102.7.17]@5060, mac=[6C5E3B87C0F6]=>[000C297B7CBE], len=1514
+================================================================================
+INVITE sip:5@10.102.7.17;user=phone SIP/2.0
+Via: SIP/2.0/TCP 10.102.7.85:50372;branch=z9hG4bK77a53653
+From: "5005" <sip:5005@10.102.7.17>;tag=6c5e3b87c0f611fa73dbcc6e-37c728f4
+To: <sip:5@10.102.7.17>
+Call-ID: 6c5e3b87-c0f6002e-47b622e0-437ee4c6@10.102.7.85
+Max-Forwards: 70
+Session-ID: 39d899e300105000a0006c5e3b87c0f6;remote=00000000000000000000000000000000
+Date: Wed, 05 Oct 2022 06:12:16 GMT
+CSeq: 101 INVITE
+User-Agent: Cisco-CP7821/14.0.1
+Contact: <sip:2fad0dcf-03a3-e62e-a227-f824467cefc6@10.102.7.85:50372;transport=tcp>;+u.sip!devicename.ccm.cisco.com="SEP6C5E3B87C0F6"
+Expires: 180
+Accept: application/sdp
+Allow: ACK,BYE,CANCEL,INVITE,NOTIFY,OPTIONS,REFER,REGISTER,UPDATE,SUBSCRIBE,INFO
+Remote-Party-ID: "5005" <sip:5005@10.102.7.17>;party=calling;id-type=subscriber;privacy=off;screen=yes
+Supported: replaces,join,sdp-anat,norefersub,resource-priority,extended-refer,X-cisco-callinfo,X-cisco-serviceuri,X-cisco-escapecodes,X-cisco-service-control,X-cisco-srtp-fallback,X-cisco-monrec,X-cisco-config,X-cisco-sis-7.0.0,X-cisco-xsi-8.5.1
+Allow-Events: kpml,dialog
+Recv-Info: conference
+Recv-Info: x-cisco-conference
+Content-Length: 685
+Content-Type: application/sdp
+Content-Disposition: session;handling=optional
+
+v=0
+o=Cisco-SIPUA 12763 0 IN IP4 10.102.7.85
+s=SIP Call
+b=AS:4064
+t=0 0
+m=audio 22110 RTP/AVP 114 9 113 115 0 8 116 18 101
+c=IN IP4 10.102.7.85
+b=TIAS:64000
+a=rtpmap:114 opus/48000/2
+a=fmtp:114 m
+--------------------------------------------------------------------------------
+花費時間 = 0.0148 ms
+
+
+2022-10-18 15:44:23.5161 
+===================================== TCP =====================================
+time=[07:44:23.500141] ip=[10.102.7.85]@50372 => [10.102.7.17]@5060, mac=[6C5E3B87C0F6]=>[000C297B7CBE], len=547
+================================================================================
+axplaybackrate=16000;sprop-maxcapturerate=16000;maxaveragebitrate=64000;stereo=0;sprop-stereo=0;usedtx=0
+a=rtpmap:9 G722/8000
+a=rtpmap:113 AMR-WB/16000
+a=fmtp:113 octet-align=0;mode-change-capability=2
+a=rtpmap:115 AMR-WB/16000
+a=fmtp:115 octet-align=1;mode-change-capability=2
+a=rtpmap:0 PCMU/8000
+a=rtpmap:8 PCMA/8000
+a=rtpmap:116 iLBC/8000
+a=fmtp:116 mode=20
+a=rtpmap:18 G729/8000
+a=fmtp:18 annexb=yes
+a=rtpmap:101 telephone-event/8000
+a=fmtp:101 0-15
+a=sendrecv
+
+--------------------------------------------------------------------------------
+花費時間 = 0.0029 ms
+
+
+2022-10-18 15:44:38.2580 
+===================================== TCP =====================================
+time=[07:44:38.243756] ip=[10.102.7.50]@49723 => [10.102.7.17]@5060, mac=[6C5E3B87CF65]=>[000C297B7CBE], len=1514
+================================================================================
+INVITE sip:5005@10.102.7.17:5060;transport=tcp SIP/2.0
+Via: SIP/2.0/TCP 10.102.7.50:49723;branch=z9hG4bK220f3f77
+From: <sip:5011@10.102.7.17>;tag=6c5e3b87cf6501297bf6ee21-63db4f2f
+To: <sip:5005@10.102.7.17>;tag=3114230~7c16b6c4-e63f-4187-a327-88baa1919a86-30701755
+Call-ID: a8577c00-1ee16277-6beed-1107660a@10.102.7.17
+Max-Forwards: 70
+Session-ID: 413d3ded00105000a0006c5e3b87cf65;remote=39d899e300105000a0006c5e3b87c0f6
+Date: Wed, 05 Oct 2022 06:12:31 GMT
+CSeq: 101 INVITE
+User-Agent: Cisco-CP7821/14.0.1
+Contact: <sip:46bef463-2f02-be56-da45-4e66e6722bbb@10.102.7.50:49723;transport=tcp>;+u.sip!devicename.ccm.cisco.com="SEP6C5E3B87CF65"
+Accept: application/sdp
+Allow: ACK,BYE,CANCEL,INVITE,NOTIFY,OPTIONS,REFER,REGISTER,UPDATE,SUBSCRIBE,INFO
+Remote-Party-ID: "5011 82395011" <sip:5011@10.102.7.17>;party=called;id-type=subscriber;privacy=off;screen=yes
+Call-Info: <urn:x-cisco-remotecc:hold>
+Supported: replaces,join,sdp-anat,norefersub,resource-priority,extended-refer,X-cisco-callinfo,X-cisco-serviceuri,X-cisco-escapecodes,X-cisco-service-control,X-cisco-srtp-fallback,X-cisco-monrec,X-cisco-config,X-cisco-sis-7.0.0,X-cisco-xsi-8.5.1
+Allow-Events: kpml,dialog
+Recv-Info: conference
+Recv-Info: x-cisco-conference
+RTP-RxStat: Dur=11,Pkt=598,Oct=102684,LatePkt=1,LostPkt=0,AvgJit=0,VQMetrics="CCR=0.0022;ICR=0.0000;ICRmx=0.0067;CS=1;SCS=0;Ver=0.90;VoRxCodec=G.711 u-la;CID=4;VoPktSizeMs=20;VoPktLost=0;VoPktDis=1;VoOneWayDela
+--------------------------------------------------------------------------------
+花費時間 = 0.0135 ms
+
+
+2022-10-18 15:44:38.2580 
+===================================== TCP =====================================
+time=[07:44:38.243943] ip=[10.102.7.50]@49723 => [10.102.7.17]@5060, mac=[6C5E3B87CF65]=>[000C297B7CBE], len=910
+================================================================================
+yMs=1;maxJitter=0"
+RTP-TxStat: Dur=11,Pkt=596,Oct=95360
+Content-Length: 684
+Content-Type: application/sdp
+Content-Disposition: session;handling=optional
+
+v=0
+o=Cisco-SIPUA 3692 1 IN IP4 10.102.7.50
+s=SIP Call
+b=AS:4064
+t=0 0
+m=audio 31402 RTP/AVP 114 9 113 115 0 8 116 18 101
+c=IN IP4 10.102.7.50
+b=TIAS:64000
+a=rtpmap:114 opus/48000/2
+a=fmtp:114 maxplaybackrate=16000;sprop-maxcapturerate=16000;maxaveragebitrate=64000;stereo=0;sprop-stereo=0;usedtx=0
+a=rtpmap:9 G722/8000
+a=rtpmap:113 AMR-WB/16000
+a=fmtp:113 octet-align=0;mode-change-capability=2
+a=rtpmap:115 AMR-WB/16000
+a=fmtp:115 octet-align=1;mode-change-capability=2
+a=rtpmap:0 PCMU/8000
+a=rtpmap:8 PCMA/8000
+a=rtpmap:116 iLBC/8000
+a=fmtp:116 mode=20
+a=rtpmap:18 G729/8000
+a=fmtp:18 annexb=yes
+a=rtpmap:101 telephone-event/8000
+a=fmtp:101 0-15
+a=sendonly
+
+--------------------------------------------------------------------------------
+花費時間 = 0.0092 ms

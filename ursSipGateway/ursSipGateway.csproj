@@ -1,0 +1,146 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>    
+	<Nullable>disable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>dotnet-cads_ApiReplyService-463B6F2F-6363-4CAE-A824-B08C4D575FE9</UserSecretsId>
+	<ServerGarbageCollection>true</ServerGarbageCollection>		
+	<ConcurrentGarbageCollection>true</ConcurrentGarbageCollection>		
+	<AssemblyVersion>1.1.36</AssemblyVersion>		
+	<FileVersion>1.1.36</FileVersion>		
+	<Company>Mitek</Company>		
+	<Product>Rich Logger</Product>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="doc\錄音解譯的封包分析\**" />
+    <Content Remove="doc\錄音解譯的封包分析\**" />
+    <EmbeddedResource Remove="doc\錄音解譯的封包分析\**" />
+    <None Remove="doc\錄音解譯的封包分析\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Controller\SipCallControll.cs" />
+    <Compile Remove="Lib\lib_sip.cs" />
+    <Compile Remove="Models\pcap\PacketInfoModel.cs" />
+    <Compile Remove="Models\rec\ParserManagerModel.cs" />
+    <Compile Remove="Models\rec\RecCallIDModel.cs" />
+    <Compile Remove="WorkerService\MakeFileWorker.cs" />
+    <Compile Remove="WorkerThread\CommandThread.cs" />
+    <Compile Remove="WorkerThread\MonitorPacketThread - 2個 Thread的版本.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Lib\lib_sip.cs%28作廢%29" />
+    <None Remove="Models\pcap\PacketInfoModel.cs_bak" />
+    <None Remove="WorkerThread\DispatchPacketThread.cs_bak" />
+    <None Remove="WorkerThread\ForwardPacketThread._沒用到.cs_bak" />
+    <None Remove="WorkerThread\MonitorPacketThread_沒用到了.cs_bak" />
+    <None Remove="WorkerThread\ReadPacketThread.cs_bak" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.0.123" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="7.0.0" />
+    <PackageReference Include="MiniProfiler.AspNetCore.Mvc" Version="4.2.22" />
+    <PackageReference Include="MiniProfiler.Integrations" Version="2.5.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+    <PackageReference Include="NLog.Extensions.Logging" Version="5.2.0" />
+    <PackageReference Include="SharpPcap" Version="6.2.5" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
+    <PackageReference Include="System.Management" Version="7.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="3rdParty\ffmpeg.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="3rdParty\sox\libflac-8.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="3rdParty\sox\libgcc_s_sjlj-1.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="3rdParty\sox\libgomp-1.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="3rdParty\sox\libid3tag-0.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="3rdParty\sox\libmad.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="3rdParty\sox\libmp3lame.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="3rdParty\sox\libogg-0.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="3rdParty\sox\libpng16-16.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="3rdParty\sox\libsox-3.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="3rdParty\sox\libssp-0.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="3rdParty\sox\libvorbis-0.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="3rdParty\sox\libvorbisenc-2.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="3rdParty\sox\libvorbisfile-3.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="3rdParty\sox\libwavpack-1.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="3rdParty\sox\libwinpthread-1.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="3rdParty\sox\LICENSE.GPL.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="3rdParty\sox\README.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="3rdParty\sox\README.win32.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="3rdParty\sox\sox.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="3rdParty\sox\sox.pdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="3rdParty\sox\soxformat.pdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="3rdParty\sox\soxi.pdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="3rdParty\sox\Uninstall sox-14.4.2.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="3rdParty\sox\wget.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="3rdParty\sox\wget.ini">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="3rdParty\sox\zlib1.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Service註冊\ursSipParserService-移除-反註冊.bat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Service註冊\ursSipParserService-註冊-啟動.bat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+</Project>

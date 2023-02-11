@@ -1,0 +1,153 @@
+﻿using Project.Enums;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Project.Lib;
+using static System.Net.Mime.MediaTypeNames;
+
+namespace Project.Controller {
+
+    // TODO: 移除 SipCallControl
+    // TODO: 移除 沒用的 ENum
+
+
+    internal class SIPCallControl {
+        public int ChannelNo { private set; get; } // 建構子帶入，這是 key 欄位
+        public string ExtNo { private set; get; } // 建構子帶入，這是 key 欄位
+        public ENUM_SIPCommand SipCommand { set; get; }
+        public ENUM_CallDirection CallDir { set; get; }
+        public ENUM_LineStatus LnStatus { set; get; }
+        public string BaseDataFolder { set; get; }
+
+        public string CallID { set; get; }      // Invite、200-oK 可取得
+
+        public string FromExt { set; get; }     // Invite、200-oK 可取得
+        public string FromIP { set; get; }      // Invite 可取得
+        public int FromRtpPort { set; get; }    // Invite 可取得  
+
+        public string ToExt { set; get; }       // Invite、200-ok 可取得
+        public string ToIP { set; get; }        // 200-ok 可取得
+        public int ToRtpPort { set; get; }      // 200-ok 可取得
+
+        public ENUM_RecordingState RecState { set; get; }
+        public DateTime RecStart { set; get; }
+        public DateTime RecStop { set; get; }
+        public int RecLength { set; get; }
+
+        public int SIPCommandCount { set; get; }
+        public int SendRtpCount { set; get; }
+        public int RecvRtpCount { set; get; }
+
+
+        // constructor
+        public SIPCallControl(int channelNo, string extNo) {
+            ChannelNo = channelNo;
+            ExtNo = extNo;
+            BaseDataFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data");
+            Reset();
+        }
+
+        public void Reset() {
+            CallDir = ENUM_CallDirection.Unknown;
+            LnStatus = ENUM_LineStatus.Idle;
+            CallID = "";
+            FromExt = "";
+            FromIP = "";
+            FromRtpPort = 0;
+            ToExt = "";
+            ToIP = "";
+            ToRtpPort = 0;
+
+            RecState = ENUM_RecordingState.RecordingIdle;
+            RecStart = DateTime.MinValue;
+            RecStop = DateTime.MinValue;
+            RecLength = 0;
+
+            SIPCommandCount = 0;
+            SendRtpCount = 0;
+            RecvRtpCount = 0;
+        }
+
+
+        ///// <summary>
+        ///// 讀取Payload，判斷是 Invite/200OK/Bye...，再依序拆解取得 SIPCallControl 各個欄位的值
+        ///// </summary>
+        ///// <param name="payLoad"></param>
+        ///// <returns></returns>
+        //public ENUM_SIPCommand SetPayloadValue(string payLoad) {
+        //    ENUM_SIPCommand sipCmd;
+        //    sipCmd = lib_sip.GetSipCommand(payLoad);
+        //    // 如果 sipCmd == SIP_Unknown，則本物件的 SipCommand !不會被設定
+        //    if (sipCmd == ENUM_SIPCommand.S_Invite) {
+        //        SipCommand = sipCmd;
+        //        FromExt = lib_sip.GetFromExtNo(payLoad);
+        //        FromIP = lib_sip.GetConnectIPAddr(payLoad);
+        //        FromRtpPort = lib_sip.GetRTPPort(payLoad);
+        //        ToExt = lib_sip.GetToExtNo(payLoad);
+        //        CallID = lib_sip.GetCallID(payLoad);
+        //        // determin the Inbound/Outbound
+        //        CallDir = (ExtNo == FromExt) ? ENUM_CallDirection.Outbound : ENUM_CallDirection.Inbound;
+        //    }
+        //    else if (sipCmd == ENUM_SIPCommand.S_200ok) {
+        //        SipCommand = sipCmd;
+        //        FromExt = lib_sip.GetFromExtNo(payLoad);
+        //        ToIP = lib_sip.GetConnectIPAddr(payLoad);
+        //        ToRtpPort = lib_sip.GetRTPPort(payLoad);
+        //        ToExt = lib_sip.GetToExtNo(payLoad);
+        //        CallID = lib_sip.GetCallID(payLoad);
+
+        //        //RecState = RecordingState.RecordingActived;
+        //        RecStart = DateTime.Now;
+        //    }
+        //    else if (sipCmd == ENUM_SIPCommand.S_Bye) {
+        //        SipCommand = sipCmd;
+        //        //RecState = RecordingState.RecordingIdle;                
+        //        RecStop = DateTime.Now;
+        //        RecLength = (int)(RecStop - RecStart).TotalSeconds;
+        //    }
+        //    return sipCmd;
+        //}
+
+        /// <summary>
+        /// 準備錄音檔檔名
+        /// </summary>
+        /// <param name="ext"></param>
+        /// <returns></returns>
+        public string GetUniqueFileNameWithoutExt() {
+            var yyyymm = DateTime.Now.ToString("yyyyMM");
+            var yyyymmdd = DateTime.Now.ToString("yyyyMMdd");
+            var chNo = string.Format("{0:000}", ChannelNo);
+            var folder = Path.Combine(BaseDataFolder, yyyymm, yyyymmdd, chNo); // data/yyyymm/yyyymmdd/001
+            System.IO.Directory.CreateDirectory(folder);
+
+            // 這裡先用年月日擋一下，之後再改...
+            var fileName = ExtNo + DateTime.Now.ToString("_yyyy_MM_dd_HH_mm_ss_fff");
+            return Path.Combine(folder, fileName);
+        }
+
+        public int SaveSIPCallInfo(string fullFileName) {
+            int ret = 1;
+            // Get jason string
+            string jasonStr = JsonConvert.SerializeObject(this);
+            //
+            try {
+                using (FileStream fs = File.Create(fullFileName)) {
+                    // writing data in string                    
+                    byte[] info = new UTF8Encoding(true).GetBytes(jasonStr);
+                    fs.Write(info, 0, info.Length);
+                }
+            }
+            catch (Exception e) {
+                ret = -1;
+            }
+            return ret;
+        }
+
+
+
+
+    }
+}
